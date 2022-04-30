@@ -1,6 +1,6 @@
 {
   "name": "digi-ruits",
-  "repository": "REPOSITORY-NAME-AS-IT-APPEARS-IN-GITHUB-URL",
+  "repository": "digi-ruits",
   "version": "0.1.0",
   "title": "Digi-Ruits",
   "description": "Ruits is a Princeton Quadrangle Club cup-pong-type game with elaborate rules and a custom-built, animated LED table!",
@@ -23,6 +23,7 @@
     "deploy": "npm run prebuild && webpack --mode production --progress && gh-pages -d build"
   },
   "dependencies": {
+    "cannon": "^0.6.2",
     "dat.gui": "^0.7.7",
     "three": "^0.116.0",
     "three-obj-loader": "^1.1.3",
