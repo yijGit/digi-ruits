@@ -1,0 +1,307 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 503,
+      "max": [
+        0.0651000365614891,
+        0.06502500176429749,
+        0.20460042357444763
+      ],
+      "min": [
+        -0.06464686989784241,
+        -0.06502509862184525,
+        -0.002773471176624298
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 6036,
+      "componentType": 5126,
+      "count": 503,
+      "max": [
+        0.9999018907546997,
+        0.9990160465240479,
+        0.17167243361473083
+      ],
+      "min": [
+        -0.9936907291412354,
+        -0.9986586570739746,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 503,
+      "max": [
+        0.975761353969574,
+        0.9684326648712158
+      ],
+      "min": [
+        0.0001759380684234202,
+        0.0001759380684234202
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 1587,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 12072,
+      "componentType": 5126,
+      "count": 280,
+      "max": [
+        0.06846732646226883,
+        0.06840123981237411,
+        0.21255196630954742
+      ],
+      "min": [
+        -0.06801607459783554,
+        -0.0684012845158577,
+        0.002773497486487031
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 15432,
+      "componentType": 5126,
+      "count": 280,
+      "max": [
+        0.9906757473945618,
+        0.9976599812507629,
+        1.0
+      ],
+      "min": [
+        -0.9999911785125732,
+        -0.9976599216461182,
+        -0.9995280504226685
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 4024,
+      "componentType": 5126,
+      "count": 280,
+      "max": [
+        0.849830150604248,
+        0.9998241066932678
+      ],
+      "min": [
+        0.1613963395357132,
+        0.0001759380684234202
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 6348,
+      "componentType": 5125,
+      "count": 1173,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "idyllKingdom (https://sketchfab.com/idyllKingdom)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/solo-cup-22798b1b718749608a0e729d576727a4",
+      "title": "Solo Cup"
+    },
+    "generator": "Sketchfab-12.65.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 11040,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 6264,
+      "byteOffset": 11040,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 18792,
+      "byteOffset": 17304,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 36096,
+      "uri": "src/components/cup.bin"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "redCup",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.9550405739
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "whiteCup",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.7885257473
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "soloCup_redCup_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "soloCup_whiteCup_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        0.49436286091804504,
+        -7.949961005924135e-17,
+        -7.949961005924138e-17,
+        0.0,
+        -7.949961005924136e-17,
+        1.8927021620139688e-16,
+        -0.49436286091804504,
+        0.0,
+        7.949961005924136e-17,
+        0.49436286091804504,
+        1.8927021620139688e-16,
+        0.0,
+        -1.6861512186494565e-15,
+        -3.5761661365540894e-07,
+        -1.6422350199718494e-06,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "7a265b3a2ddf4914ba64c738eb274fed.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4,
+        5
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "soloCup"
+    },
+    {
+      "mesh": 0,
+      "name": "soloCup_redCup_0"
+    },
+    {
+      "mesh": 1,
+      "name": "soloCup_whiteCup_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}
