@@ -1,0 +1,11 @@
+Model Information:
+* title:	Solo Cup
+* source:	https://sketchfab.com/3d-models/solo-cup-22798b1b718749608a0e729d576727a4
+* author:	idyllKingdom (https://sketchfab.com/idyllKingdom)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Solo Cup" (https://sketchfab.com/3d-models/solo-cup-22798b1b718749608a0e729d576727a4) by idyllKingdom (https://sketchfab.com/idyllKingdom) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
