@@ -1,9 +1,9 @@
 import * as Dat from 'dat.gui';
 import { Scene, Color } from 'three';
-import { Flower, Land, Ball } from 'objects';
-import { BasicLights } from 'lights';
+import { Flower, Land, Ball, Table } from 'objects';
 import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, } from 'cannon';
-import { Camera } from 'three';
+import { BasicLights, CupLightsBlue, CupLightsYellow } from 'lights';
+import { Rack } from '../objects';
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -21,7 +21,22 @@ class MainScene extends Scene {
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
-        this.add(land, flower, lights);
+
+                // Add meshes to scene
+        //***NEEDS TO BE INCORPORATED INTO SCENE */
+        const blueLight = new CupLightsBlue(this);
+        const yellowLight = new CupLightsYellow(this);
+        const table = new Table();
+        const blueRack = new Rack(this, 0);
+        const yellowRack = new Rack(this, 1);
+
+        this.add(blueLight);
+        this.add(yellowLight);
+        this.add(lights);
+        this.add(blueRack);
+        this.add(yellowRack);
+        this.add(table);
+        /* END SCENE INCORPORATION */
 
         this.state.gui.add(this.state, 'power', 1, 10);
 
@@ -82,7 +97,7 @@ class MainScene extends Scene {
     handleMouseClick(event) {
         const edgeOffset = 30.0;
         const ball = new Ball(this, this.state.power);
-        const mat1_ground = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.9});
+        const mat1_ground = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75});
         this.world.addContactMaterial(mat1_ground);
         ball.shootBall();
         this.add(ball);

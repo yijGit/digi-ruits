@@ -35,12 +35,12 @@ class Ball extends Group {
 
     initBody() {
         const mass = 1;
-        const radius = 1;
+        const radius = 0.25;
         let sphereShape = new Sphere(radius);
         let sphereBody = new Body({ mass: mass });
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(5, 5, 5);
-        sphereBody.linearDamping = 0.9;
+        sphereBody.position.set(0, 0, 0);
+        sphereBody.linearDamping = 0.1;
         this.parent.world.add(sphereBody);
         this.body = sphereBody;
     }
@@ -48,7 +48,7 @@ class Ball extends Group {
     initMesh() {
         const segmentSize = 32;
         const ballGeometry = new SphereGeometry(
-            1,
+            0.25,
             segmentSize,
             segmentSize
         );
@@ -62,7 +62,7 @@ class Ball extends Group {
     update() {
         // Update ball mesh
         this.mesh.position.copy(this.body.position);
-        this.mesh.position.y -= 1.5;
+        this.mesh.position.y -= 0.;
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
     }
