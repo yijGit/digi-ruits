@@ -5,14 +5,16 @@ import {
     SphereGeometry,
     MeshStandardMaterial,
     Mesh,
+    Texture,
 } from 'three';
 import { Sphere, Body } from 'cannon-es';
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial, Material, BufferGeometry } from 'three';
 
 class Ball extends Group {
     constructor(parent, power, shootDirection) {
         super();
         this.parent = parent;
+        this.name = "ball";
 
         // Initialize state and ball properties
         this.state = {
@@ -34,16 +36,17 @@ class Ball extends Group {
         const mass = 0.5;
         const radius = 0.125;
         const sphereShape = new Sphere(radius);
-        const sphereBody = new Body({ 
+        const sphereBody = new Body({
             mass: mass,
             material: this.parent.bounceMaterial,
             position: new Vector3(0, 0, -7)
-         });
+        });
         sphereBody.addShape(sphereShape);
         //sphereBody.position.set(0, 0, -7);
         sphereBody.linearDamping = 0.1;
         this.parent.world.addBody(sphereBody);
         this.body = sphereBody;
+        this.body.name = "ball";
     }
 
     initMesh() {
@@ -58,6 +61,7 @@ class Ball extends Group {
         this.add(ballMesh);
         ballMesh.position.copy(this.body.position);
         this.mesh = ballMesh;
+        this.mesh.name = "ball";
     }
 
     // Update ball mesh
@@ -65,6 +69,10 @@ class Ball extends Group {
         this.mesh.position.copy(this.body.position);
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
+        // out of bounds condition
+        if (Math.abs(this.mesh.position.z) > 7 || Math.abs(this.mesh.position.x) > 3) {
+            this.parent.state.ball_needs_delete = true;
+        }
     }
 
     // Add a shooting force to the ball with the given power and direction
@@ -79,6 +87,12 @@ class Ball extends Group {
             (shootDirection.y + 1) * power,
             shootDirection.z * power
         );
+    }
+
+    selfDestruct() {
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+        this.position.x = 10000;
     }
 }
 

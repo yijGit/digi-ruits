@@ -71,16 +71,16 @@ class Rack extends Group {
         if (side == 0) {
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
-                    let cup = new Cup(parent, list[i].x, list[i].z);
-                    // this.add(cup);
+                    let cup = new Cup(parent, list[i].x, 0.4, list[i].z);
+                    this.add(cup);
                 }
             }
         }
         else {
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
-                    let cup = new Cup(parent, list[16 + i].x, list[16 + i].z);
-                    // this.add(cup);
+                    let cup = new Cup(parent, list[16 + i].x, 0.4, list[16 + i].z);
+                    this.add(cup);
                 }
             }
         }
