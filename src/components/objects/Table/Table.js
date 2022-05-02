@@ -10,12 +10,12 @@ class Table extends Group {
         const loader = new GLTFLoader();
 
         let table_scale = 6;
-        this.position.y = -2;
+        //this.position.y = -2;
         this.scale.x = table_scale;
         this.scale.y = table_scale;
         this.scale.z = table_scale;
 
-        this.position.y = -2.5;
+        this.position.y = -2.060;
         this.name = "table";
 
         loader.load(MODEL, (gltf) => {
