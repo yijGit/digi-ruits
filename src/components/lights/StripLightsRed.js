@@ -1,4 +1,4 @@
-import { Vec3 } from 'cannon';
+import { Vec3 } from 'cannon-es';
 import { Group, Vector3, RectAreaLight } from 'three';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
 

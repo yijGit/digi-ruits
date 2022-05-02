@@ -6,6 +6,7 @@ import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights
 import { Cup, Rack } from '../objects';
 import MODEL from '../objects/Cup/cup.gltf';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { StripLightsBlue, StripLightsRed, StripLightsWhite } from '../lights';
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -42,20 +43,23 @@ class MainScene extends Scene {
         this.initCannon();
         this.init();
 
-        // const blueRack = new Rack(this, 0);
-        // const yellowRack = new Rack(this, 1);
+        //Add lights!
+        //const blueRack = new Rack(this, 0);
+        //const yellowRack = new Rack(this, 1);
 
         this.add(lights);
-        // this.add(yellowRack);
-        // this.add(blueRack);
+        //this.add(yellowRack);
+        //this.add(blueRack);
 
-        //this.animate();
+        
+        const red = new StripLightsRed(this);
+        const white = new StripLightsWhite(this);
+        const green = new StripLights(this);
+        const blue = new StripLightsBlue(this);
+        this.add(red,white,green,blue);
 
-        // this.add(blueLight);
-        // this.add(yellowLight);
-
-        const strip = new StripLights(this);
-        this.add(strip);
+        this.add(blueLight);
+        this.add(yellowLight);
     }
 
     initCannon() {
