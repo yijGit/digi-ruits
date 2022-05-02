@@ -6,7 +6,7 @@ import {
     MeshStandardMaterial,
     Mesh,
 } from 'three';
-import { Sphere, Body } from 'cannon';
+import { Sphere, Body } from 'cannon-es';
 import { MeshBasicMaterial } from 'three';
 
 class Ball extends Group {
@@ -39,9 +39,9 @@ class Ball extends Group {
             material: this.parent.bounceMaterial
          });
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(0, 0.25, 7);
+        sphereBody.position.set(0, 0, -7);
         sphereBody.linearDamping = 0.1;
-        this.parent.world.add(sphereBody);
+        this.parent.world.addBody(sphereBody);
         this.body = sphereBody;
     }
 

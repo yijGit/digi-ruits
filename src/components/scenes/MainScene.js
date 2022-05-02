@@ -1,7 +1,7 @@
 import * as Dat from 'dat.gui';
 import { Scene, Color, MeshBasicMaterial, PlaneGeometry, Vector3, CylinderGeometry, Mesh, TextureLoader, MeshStandardMaterial} from 'three';
 import { Flower, Land, Ball, Table, Arrow } from 'objects';
-import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3, Cylinder } from 'cannon';
+import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3, Cylinder, Box, Quaternion } from 'cannon-es';
 import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights';
 import { Cup, Rack } from '../objects';
 import MODEL from '../objects/Cup/cup.gltf';
@@ -15,7 +15,7 @@ class MainScene extends Scene {
             gui: new Dat.GUI(),
             mouseClick: false,
             power: 5,
-            shootDirection: new Vector3(0, 0, -1),
+            shootDirection: new Vector3(0, 0, 1),
             updateList: [],
         };
 
@@ -32,6 +32,7 @@ class MainScene extends Scene {
         const table = new Table();
 
         this.add(table);
+        console.log(table);
         /* END SCENE INCORPORATION */
 
         this.state.gui.add(this.state, 'power', 1, 10);
@@ -70,7 +71,7 @@ class MainScene extends Scene {
 
         solver.iterations = 7;
         solver.tolerance = 0.1;
-        var split = true;
+        const split = true;
         if (split)
             world.solver = new SplitSolver(solver);
         else
@@ -82,8 +83,8 @@ class MainScene extends Scene {
         // Create a slippery material (friction coefficient = 0.0)
         const groundMaterial = new Material('ground');
         const groundCM = new ContactMaterial(groundMaterial, groundMaterial, {
-            friction: 0.4,
-            restitution: 0.3,
+            friction: 0.3,
+            restitution: 0.0,
             contactEquationStiffness: 1e8,
             contactEquationRelaxation: 3,
             frictionEquationStiffness: 1e8,
@@ -101,7 +102,6 @@ class MainScene extends Scene {
         // We must add the contact materials to the world
         world.addContactMaterial(bounceCM);
         this.bounceMaterial = bounceMaterial;
-        console.log(world);
 
         // Create a plane
 
@@ -118,38 +118,49 @@ class MainScene extends Scene {
 
         // Create a plane
         
-        const groundShape = new Plane();
-        const groundBody = new Body({ mass: 0, material: this.groundMaterial });
-        groundBody.addShape(groundShape);
-        groundBody.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), -Math.PI / 2);
-        this.groundBody = groundBody;
-        this.world.addBody(groundBody);
+        // const groundShape = new Plane();
+        // const groundBody = new Body({ mass: 0, material: this.groundMaterial });
+        // groundBody.addShape(groundShape);
+        // groundBody.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), -Math.PI / 2);
+        // this.groundBody = groundBody;
+        // this.world.addBody(groundBody);
+
+        // Create a table-sized box
+
+        const tableShape = new Box(new Vec3(6 / 2, 6 / 2, 6 / 2));
+        const tableBody = new Body({
+            mass: 0, 
+            material: this.groundMaterial
+        });
+        tableBody.addShape(tableShape);
+        tableBody.position.set(0, -3, 0);
+        this.world.addBody(tableBody);
 
         // cup
-
-        // const cup = new Cup(this, 1, 1);
-        // this.add(cup);
-        const cupShape = new Cylinder(0.5, 0.35, 1, 32, 32);
+        const cupShape = new Cylinder(0.3, 0.2, 0.8, 32, 32);
         const cupBody = new Body({
-            mass: 1000,
+            mass: 10,
             material: this.groundMaterial,
-            position: new Vector3(0, 0.5, 0),
+            position: new Vector3(0, 0.4, 0),
         });
         cupBody.addShape(cupShape);
-        cupBody.linearDamping = 0.1;
-        this.cupBody = cupBody;
 
-        const cupGeometry = new CylinderGeometry(0.5, 0.35, 1, 32, 1, false);
+        cupBody.linearDamping = 0.1;
+        cupBody.addEventListener('collide', this.handleCupCollision);
+        this.cupBody = cupBody;
+        this.world.addBody(cupBody);
+
+        const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, true);
+        //cupGeometry.rotateX(Math.PI/2);
         const cupMaterial = new MeshStandardMaterial();
         const cupMesh = new Mesh(cupGeometry, cupMaterial);
 
         this.add(cupMesh);
         this.cupMesh = cupMesh;
-        this.world.addBody(cupBody);
     }
 
-    setupCups() {
-
+    handleCupCollision(event) {
+        console.log('hit');
     }
 
     handleKeyDownEvents(event) {
@@ -167,8 +178,6 @@ class MainScene extends Scene {
         }
         else if (key === ' ') {
             const ball = new Ball(this, this.state.power, this.state.shootDirection);
-            //const mat = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75 });
-            //this.world.addContactMaterial(mat);
             ball.shootBall();
             this.add(ball);
         }
@@ -180,7 +189,7 @@ class MainScene extends Scene {
 
     update(timeStamp) {
         const { updateList } = this.state;
-        this.world.step(1 / 60);
+        this.world.fixedStep();
         for (const obj of updateList) {
             obj.update(timeStamp);
         }
