@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color, MeshBasicMaterial, PlaneGeometry, Vector3, CylinderGeometry, Mesh, TextureLoader, MeshStandardMaterial } from 'three';
+import { Scene, Color, MeshBasicMaterial, PlaneGeometry, Vector3, CylinderGeometry, Mesh, TextureLoader, MeshStandardMaterial} from 'three';
 import { Flower, Land, Ball, Table, Arrow } from 'objects';
 import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3, Cylinder, Box, Quaternion } from 'cannon-es';
 import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights';
@@ -20,16 +20,17 @@ class MainScene extends Scene {
             updateList: [],
         };
 
-
+        
 
         var bkg;
 
         const loader = new TextureLoader();
-        bkg = loader.load('src/components/scenes/bkg.jpg', function (texture) {
-            bkg = texture;
-        });
+bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
+            {
+             bkg = texture;  
+            });
 
-        this.background = bkg;
+            this.background = bkg;
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
@@ -59,7 +60,7 @@ class MainScene extends Scene {
         //this.add(yellowRack);
         //this.add(blueRack);
 
-
+        
         // const red = new StripLightsRed(this);
         // const white = new StripLightsWhite(this);
         // const green = new StripLights(this);
@@ -105,11 +106,11 @@ class MainScene extends Scene {
         // We must add the contact materials to the world
         world.addContactMaterial(groundCM);
         this.groundMaterial = groundMaterial;
-
+        
         const bounceMaterial = new Material('bounce');
-        const bounceCM = new ContactMaterial(groundMaterial, bounceMaterial, {
+        const bounceCM = new ContactMaterial( groundMaterial, bounceMaterial, { 
             friction: 0.0,
-            restitution: 0.75
+            restitution: 0.75 
         });
         // We must add the contact materials to the world
         world.addContactMaterial(bounceCM);
@@ -129,7 +130,7 @@ class MainScene extends Scene {
         //const groundMaterial = new Material('ground');
 
         // Create a plane
-
+        
         // const groundShape = new Plane();
         // const groundBody = new Body({ mass: 0, material: this.groundMaterial });
         // groundBody.addShape(groundShape);
@@ -141,7 +142,7 @@ class MainScene extends Scene {
 
         const tableShape = new Box(new Vec3(6 / 2, 6 / 2, 6 / 2));
         const tableBody = new Body({
-            mass: 0,
+            mass: 0, 
             material: this.groundMaterial
         });
         tableBody.addShape(tableShape);
@@ -183,7 +184,7 @@ class MainScene extends Scene {
             this.arrow.show();
             this.state.shootDirection.applyAxisAngle(axis, angle);
             this.arrow.updateShotDirectionPower(axis, angle);
-        }
+        } 
         else if (key === 'd') {
             this.state.shootDirection.applyAxisAngle(axis, -angle);
             this.arrow.updateShotDirectionPower(axis, -angle);
