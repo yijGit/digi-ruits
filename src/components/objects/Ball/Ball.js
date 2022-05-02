@@ -37,7 +37,7 @@ class Ball extends Group {
         const sphereBody = new Body({ 
             mass: mass,
             material: this.parent.bounceMaterial,
-            position: new Vector3(0, 0, -7)
+            position: new Vector3(1, 5, 1)
          });
         sphereBody.addShape(sphereShape);
         //sphereBody.position.set(0, 0, -7);
@@ -68,12 +68,9 @@ class Ball extends Group {
     }
 
     // Add a shooting force to the ball with the given power and direction
-    /*
-    Adapted From: 
-    */
     shootBall() {
         const shootDirection = this.state.shootDirection;
-        const power = this.state.power;
+        const power = this.state.power * 0.75 + 5;
         this.body.velocity.set(
             shootDirection.x * power,
             (shootDirection.y + 1) * power,

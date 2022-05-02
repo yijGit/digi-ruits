@@ -14,16 +14,14 @@ class MainScene extends Scene {
 
         this.state = {
             gui: new Dat.GUI(),
-            mouseClick: false,
-            power: 5,
+            spaceDown: false,
+            powerInc: true,
+            power: 1,
             shootDirection: new Vector3(0, 0, 1),
             updateList: [],
         };
 
-
-
         var bkg;
-
         const loader = new TextureLoader();
         bkg = loader.load('src/components/scenes/bkg.jpg', function (texture) {
             bkg = texture;
@@ -47,6 +45,7 @@ class MainScene extends Scene {
         this.state.gui.add(this.state, 'power', 1, 10);
 
         window.addEventListener('keydown', this.handleKeyDownEvents.bind(this), false);
+        window.addEventListener('keyup', this.handleKeyUpEvents.bind(this), false);
         this.initCannon();
         this.setupScene();
 
@@ -127,7 +126,7 @@ class MainScene extends Scene {
         this.add(table);
 
         // cup
-        const cup = new Cup(this, 1, 0.4, 1);
+        const cup = new Cup(this, 1, 0, 1);
         this.add(cup);
     }
     
@@ -145,9 +144,37 @@ class MainScene extends Scene {
             this.arrow.updateShotDirectionPower(axis, -angle);
         }
         else if (key === ' ') {
-            const ball = new Ball(this, this.state.power, this.state.shootDirection);
-            ball.shootBall();
+            this.state.spaceDown = true;
+            if (this.state.power >= 5 ) {
+                this.state.powerInc = false;
+            }
+            else if (this.state.power <= 0) {
+                this.state.powerInc = true;
+            }
+            if (this.state.powerInc) {
+                this.state.power += 0.25;
+            }
+            else {
+                this.state.power -= 0.25;
+            }
+            console.log(this.state.power);
+        }
+        else if (key === 's') {
+            const ball = new Ball(this, 0, this.state.shootDirection);
             this.add(ball);
+        }
+    }
+
+    handleKeyUpEvents(event) {
+        const key = event.key;
+        if (key === ' ') {
+            if (this.state.spaceDown === true) {
+                const ball = new Ball(this, this.state.power, this.state.shootDirection);
+                ball.shootBall();
+                this.add(ball);
+            }
+            this.state.spaceDown = false;
+            this.state.power = 0;
         }
     }
 
