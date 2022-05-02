@@ -43,10 +43,11 @@ class Cup extends Group {
     }
 
     initBody(x, z) {
-        var cupShape = new Cylinder(1, 1,2,100,100);
-        var cupBody = new Body({mass: 1000});
+        var cupShape = new Cylinder(1, 1,2,100);
+        var cupBody = new Body({mass: 10});
+        cupBody.addShape(cupShape);
         cupBody.position.set(x, 2, z);
-        cupBody.shape = cupShape;
+        cupBody.linearDamping = 0.1;
         this.parent.world.add(cupBody);
         this.body = cupBody;
     }
@@ -58,13 +59,11 @@ class Cup extends Group {
         this.add(cupMesh);
         this.mesh = cupMesh;
         this.body.material = cupMaterial;
-        const cup_ground = new ContactMaterial(this.parent.groundBody.material, cupMaterial, { friction: 0.0, restitution: 0.75 });
-        this.parent.world.addContactMaterial(cup_ground);
     }
 
     update(timeStamp) {
+        //console.log(this.body.position);
         this.mesh.position.copy(this.body.position);
-        this.mesh.position.y -= 0.;
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
     }

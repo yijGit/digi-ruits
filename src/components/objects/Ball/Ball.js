@@ -59,7 +59,6 @@ class Ball extends Group {
     // Update ball mesh
     update() {
         this.mesh.position.copy(this.body.position);
-        this.mesh.position.y -= 0.125;
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
     }
