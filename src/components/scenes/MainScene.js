@@ -1,9 +1,9 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, Color, MeshBasicMaterial, PlaneGeometry} from 'three';
 import { Flower, Land, Ball, Table } from 'objects';
-import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, } from 'cannon';
-import { BasicLights, CupLightsBlue, CupLightsYellow } from 'lights';
-import { Rack } from '../objects';
+import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3 } from 'cannon';
+import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights';
+import { Cup, Rack } from '../objects';
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -16,25 +16,19 @@ class MainScene extends Scene {
             updateList: [],
         };
 
-        this.background = new Color(0x7ec0ee);
+        this.background = new Color(0x0ec088);
 
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
 
-                // Add meshes to scene
+        // Add meshes to scene
         //***NEEDS TO BE INCORPORATED INTO SCENE */
         const blueLight = new CupLightsBlue(this);
         const yellowLight = new CupLightsYellow(this);
         const table = new Table();
-        const blueRack = new Rack(this, 0);
-        const yellowRack = new Rack(this, 1);
 
-        this.add(blueLight);
-        this.add(yellowLight);
-        this.add(lights);
-        this.add(blueRack);
-        this.add(yellowRack);
+
         this.add(table);
         /* END SCENE INCORPORATION */
 
@@ -43,7 +37,24 @@ class MainScene extends Scene {
         window.addEventListener('click', this.handleMouseClick.bind(this), false);
         this.initCannon();
         this.init();
+
+        // const blueRack = new Rack(this, 0);
+        // const yellowRack = new Rack(this, 1);
+
+        this.add(lights);
+        // this.add(yellowRack);
+        // this.add(blueRack);
+        var cup = new Cup(this, 1, 1);
+        this.add(cup);
+        this.world.addBody(cup.body);
         //this.animate();
+        this.cupMaterial = cup.body.material;
+
+        this.add(blueLight);
+        this.add(yellowLight);
+
+        const strip = new StripLights(this);
+        this.add(strip);
     }
 
     initCannon() {
@@ -60,12 +71,12 @@ class MainScene extends Scene {
         solver.iterations = 7;
         solver.tolerance = 0.1;
         var split = true;
-        if(split)
+        if (split)
             world.solver = new SplitSolver(solver);
         else
             world.solver = solver;
 
-        world.gravity.set(0,-9.81,0);
+        world.gravity.set(0, -9.81, 0);
         world.broadphase = new NaiveBroadphase();
 
         // Create a slippery material (friction coefficient = 0.0)
@@ -79,15 +90,16 @@ class MainScene extends Scene {
         // We must add the contact materials to the world
         world.addContactMaterial(physicsContactMaterial);
 
-        // Create a plane
         const groundMaterial = new Material('ground');
+
+        // Create a plane
+        
         const groundShape = new Plane();
         const groundBody = new Body({ mass: 0, material: groundMaterial });
         groundBody.addShape(groundShape);
         groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
         this.groundBody = groundBody;
         world.addBody(groundBody);
-        //this.add(groundBody);
     }
 
     init() {
@@ -97,7 +109,7 @@ class MainScene extends Scene {
     handleMouseClick(event) {
         const edgeOffset = 30.0;
         const ball = new Ball(this, this.state.power);
-        const mat1_ground = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75});
+        const mat1_ground = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75 });
         this.world.addContactMaterial(mat1_ground);
         ball.shootBall();
         this.add(ball);
@@ -109,7 +121,7 @@ class MainScene extends Scene {
 
     update(timeStamp) {
         const { updateList } = this.state;
-        this.world.step(1/60);
+        this.world.step(1 / 60);
         for (const obj of updateList) {
             obj.update(timeStamp);
         }

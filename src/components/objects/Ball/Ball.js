@@ -18,7 +18,7 @@ class Ball extends Group {
         this.state = {
             projPos: [],
             power: power,
-            shootDirection: new Vector3(1, 0, 0),
+            shootDirection: new Vector3(0.2, 0, 1),
             moving: false,
             previous: new Vector3(),
         };
