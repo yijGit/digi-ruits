@@ -6,7 +6,7 @@ class BasicLights extends Group {
         super(...args);
 
         const dir = new SpotLight(0xffffff, 1.6, 7, 0.8, 1, 0.5);
-        const ambi = new AmbientLight(0x404040, 1);
+        const ambi = new AmbientLight(0x404040, 0.5);
         const hemi = new HemisphereLight(0xffffbb, 0x080820, 0.5);
 
         dir.position.set(5, 1, 2);
