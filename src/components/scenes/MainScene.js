@@ -2,7 +2,7 @@ import * as Dat from 'dat.gui';
 import { Scene, Color, MeshBasicMaterial, PlaneGeometry} from 'three';
 import { Flower, Land, Ball, Table } from 'objects';
 import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3 } from 'cannon';
-import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights';
+import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights, StripLightsBlue, StripLightsRed, StripLightsWhite} from 'lights';
 import { Cup, Rack } from '../objects';
 
 class MainScene extends Scene {
@@ -17,9 +17,6 @@ class MainScene extends Scene {
         };
 
         this.background = new Color(0x0ec088);
-
-        const land = new Land();
-        const flower = new Flower(this);
         const lights = new BasicLights();
 
         // Add meshes to scene
@@ -55,6 +52,12 @@ class MainScene extends Scene {
 
         const strip = new StripLights(this);
         this.add(strip);
+        const stripBlue = new StripLightsBlue(this);
+        this.add(stripBlue);
+        const stripRed = new StripLightsRed(this);
+        this.add(stripRed);
+        const stripWhite = new StripLightsWhite(this);
+        this.add(stripWhite);
     }
 
     initCannon() {
