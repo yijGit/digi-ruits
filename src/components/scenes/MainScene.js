@@ -1,9 +1,8 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
-import { Flower, Land, Ball, Table } from 'objects';
+import { Scene, Color, Vector3 } from 'three';
+import { Flower, Land, Ball, Table, Rack, Arrow } from 'objects';
 import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, } from 'cannon';
 import { BasicLights, CupLightsBlue, CupLightsYellow } from 'lights';
-import { Rack } from '../objects';
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -11,8 +10,9 @@ class MainScene extends Scene {
 
         this.state = {
             gui: new Dat.GUI(),
-            power: 1,
             mouseClick: false,
+            power: 5,
+            shootDirection: new Vector3(0, 0, 1),
             updateList: [],
         };
 
@@ -30,8 +30,8 @@ class MainScene extends Scene {
         const blueRack = new Rack(this, 0);
         const yellowRack = new Rack(this, 1);
 
-        this.add(blueLight);
-        this.add(yellowLight);
+        // this.add(blueLight);
+        // this.add(yellowLight);
         this.add(lights);
         this.add(blueRack);
         this.add(yellowRack);
@@ -40,7 +40,8 @@ class MainScene extends Scene {
 
         this.state.gui.add(this.state, 'power', 1, 10);
 
-        window.addEventListener('click', this.handleMouseClick.bind(this), false);
+        //window.addEventListener('click', this.handleMouseClick.bind(this), false);
+        window.addEventListener('keydown', this.handleKeyDownEvents.bind(this), false);
         this.initCannon();
         this.init();
         //this.animate();
@@ -80,27 +81,45 @@ class MainScene extends Scene {
         world.addContactMaterial(physicsContactMaterial);
 
         // Create a plane
+
+        //this.add(groundBody);
+    }
+
+    init() {
+        const pos = new Vector3(0, 0, 0);
+        const arrow = new Arrow(this, pos);
+        this.add(arrow);
+        this.arrow = arrow;
+
         const groundMaterial = new Material('ground');
         const groundShape = new Plane();
         const groundBody = new Body({ mass: 0, material: groundMaterial });
         groundBody.addShape(groundShape);
         groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
         this.groundBody = groundBody;
-        world.addBody(groundBody);
-        //this.add(groundBody);
+        this.world.addBody(groundBody);
     }
 
-    init() {
-
-    }
-
-    handleMouseClick(event) {
-        const edgeOffset = 30.0;
-        const ball = new Ball(this, this.state.power);
-        const mat1_ground = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75});
-        this.world.addContactMaterial(mat1_ground);
-        ball.shootBall();
-        this.add(ball);
+    handleKeyDownEvents(event) {
+        const angle = 0.05;
+        const axis = new Vector3(0, 1, 0);
+        const key = event.key;
+        if (key === 'a') {
+            this.arrow.show();
+            this.state.shootDirection.applyAxisAngle(axis, angle);
+            this.arrow.updateShotDirectionPower(axis, angle);
+        } 
+        else if (key === 'd') {
+            this.state.shootDirection.applyAxisAngle(axis, -angle);
+            this.arrow.updateShotDirectionPower(axis, -angle);
+        }
+        else if (key === ' ') {
+            const ball = new Ball(this, this.state.power, this.state.shootDirection);
+            const mat = new ContactMaterial(this.groundBody.material, ball.body.material, { friction: 0.0, restitution: 0.75});
+            this.world.addContactMaterial(mat);
+            ball.shootBall();
+            this.add(ball);
+        }
     }
 
     addToUpdateList(object) {

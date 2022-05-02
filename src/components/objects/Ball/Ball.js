@@ -10,17 +10,14 @@ import { Sphere, Body } from 'cannon';
 import { MeshBasicMaterial } from 'three';
 
 class Ball extends Group {
-    constructor(parent, power) {
+    constructor(parent, power, shootDirection) {
         super();
         this.parent = parent;
 
         // Initialize state and ball properties
         this.state = {
-            projPos: [],
             power: power,
-            shootDirection: new Vector3(1, 0, 0),
-            moving: false,
-            previous: new Vector3(),
+            shootDirection: shootDirection,
         };
 
         // Handles Collisions
@@ -34,12 +31,12 @@ class Ball extends Group {
     }
 
     initBody() {
-        const mass = 1;
-        const radius = 0.25;
+        const mass = 0.5;
+        const radius = 0.125;
         let sphereShape = new Sphere(radius);
         let sphereBody = new Body({ mass: mass });
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(0, 0, 0);
+        sphereBody.position.set(0, 0.25, -7);
         sphereBody.linearDamping = 0.1;
         this.parent.world.add(sphereBody);
         this.body = sphereBody;
@@ -48,7 +45,7 @@ class Ball extends Group {
     initMesh() {
         const segmentSize = 32;
         const ballGeometry = new SphereGeometry(
-            0.25,
+            0.125,
             segmentSize,
             segmentSize
         );
@@ -59,10 +56,10 @@ class Ball extends Group {
         this.body.material = ballMaterial;
     }
 
+    // Update ball mesh
     update() {
-        // Update ball mesh
         this.mesh.position.copy(this.body.position);
-        this.mesh.position.y -= 0.;
+        this.mesh.position.y -= 0.125;
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
     }
@@ -73,14 +70,13 @@ class Ball extends Group {
     */
     shootBall() {
         const shootDirection = this.state.shootDirection;
-        const power = this.state.power * 5;
+        const power = this.state.power;
         this.body.velocity.set(
             shootDirection.x * power,
-            shootDirection.y * power,
+            (shootDirection.y + 1) * power,
             shootDirection.z * power
         );
     }
-
 }
 
 export default Ball;
