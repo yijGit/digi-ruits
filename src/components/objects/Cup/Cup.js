@@ -8,58 +8,58 @@ import {
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import MODEL from './cup.gltf';
-import { Sphere, Box, Cylinder, Body, Shape, ConvexPolyhedron, ContactMaterial } from 'cannon';
+import { Sphere, Box, Cylinder, Body, Shape, ConvexPolyhedron, ContactMaterial } from 'cannon-es';
+
 
 class Cup extends Group {
-    constructor(parent, x, z) {
+    constructor(parent, x, y, z) {
         // Call parent Group() constructor
         super();
+        //const loader = new GLTFLoader();
         this.parent = parent;
 
-        this.state = {
-            previous: new Vector3(),
-        };
+        this.state = {}
 
-        const loader = new GLTFLoader();
+        // loader.load(MODEL, (gltf) => {
+        //     this.add(gltf.scene);
+        // });
 
-        //this.scale.x = 0.1;
-        //this.scale.y = 0.1;
-        //this.scale.z = 0.1;
+        // Handles Collisions
+        this.initBody(x, y, z);
 
-        this.position.x = x;
-        this.position.z = z;
-
-        this.name = 'cup';
-
-        //loader.load(MODEL, (gltf) => {
-           // this.add(gltf.scene);
-       // });
-
-        this.initBody(x, z);
+        // 
         this.initMesh();
 
-        //add cup to parent update list
         parent.addToUpdateList(this);
     }
 
-    initBody(x, z) {
-        var cupShape = new Cylinder(1, 1,2,100);
-        var cupBody = new Body({mass: 10});
+    initBody(x, y, z) {
+        const cupShape = new Cylinder(0.3, 0.2, 0.8, 32, 32);
+        const cupBody = new Body({
+            mass: 10,
+            material: this.parent.groundMaterial,
+            position: new Vector3(x, y, z),
+        });
         cupBody.addShape(cupShape);
-        cupBody.position.set(x, 2, z);
         cupBody.linearDamping = 0.1;
-        this.parent.world.add(cupBody);
+        this.parent.world.addBody(cupBody);
+        cupBody.addEventListener('collide', this.handleCollision);
         this.body = cupBody;
     }
 
     initMesh(){
-        const cylinderGeometry = new CylinderGeometry(1, 1,2,100,100);
-        const cupMaterial = new MeshBasicMaterial();
-        const cupMesh = new Mesh(cylinderGeometry, cupMaterial);
+        const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, false);
+        const cupMaterial = new MeshStandardMaterial();
+        const cupMesh = new Mesh(cupGeometry, cupMaterial);
         this.add(cupMesh);
+        cupMesh.position.copy(this.body.position);
         this.mesh = cupMesh;
-        this.body.material = cupMaterial;
     }
+
+    handleCollision(event) {
+        console.log('hit');
+    }
+
 
     update(timeStamp) {
         //console.log(this.body.position);

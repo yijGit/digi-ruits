@@ -6,6 +6,7 @@ import {
     Mesh,
     ConeGeometry,
     Vector3,
+    MeshNormalMaterial,
 } from 'three';
 
 class Arrow extends Group {
@@ -24,7 +25,7 @@ class Arrow extends Group {
     setupArrowMesh() {
         // Create a box
         var geometry = new BoxGeometry(0.25, 0.25, 1);
-        var material = new MeshBasicMaterial({ color: 0xffffff });
+        var material = new MeshNormalMaterial({ color: 0xffffff });
         var cube = new Mesh(geometry, material);
         cube.position.set(this.ballPos.x, this.ballPos.y, this.ballPos.z);
         this.cube = cube;

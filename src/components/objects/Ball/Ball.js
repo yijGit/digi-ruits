@@ -33,13 +33,14 @@ class Ball extends Group {
     initBody() {
         const mass = 0.5;
         const radius = 0.125;
-        let sphereShape = new Sphere(radius);
-        let sphereBody = new Body({ 
+        const sphereShape = new Sphere(radius);
+        const sphereBody = new Body({ 
             mass: mass,
-            material: this.parent.bounceMaterial
+            material: this.parent.bounceMaterial,
+            position: new Vector3(0, 0, -7)
          });
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(0, 0, -7);
+        //sphereBody.position.set(0, 0, -7);
         sphereBody.linearDamping = 0.1;
         this.parent.world.addBody(sphereBody);
         this.body = sphereBody;
@@ -55,6 +56,7 @@ class Ball extends Group {
         const ballMaterial = new MeshStandardMaterial();
         const ballMesh = new Mesh(ballGeometry, ballMaterial);
         this.add(ballMesh);
+        ballMesh.position.copy(this.body.position);
         this.mesh = ballMesh;
     }
 

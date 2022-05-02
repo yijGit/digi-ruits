@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color, MeshBasicMaterial, PlaneGeometry, Vector3, CylinderGeometry, Mesh, TextureLoader, MeshStandardMaterial} from 'three';
+import { Scene, Color, MeshBasicMaterial, PlaneGeometry, Vector3, CylinderGeometry, Mesh, TextureLoader, MeshStandardMaterial, ArrowHelper} from 'three';
 import { Flower, Land, Ball, Table, Arrow } from 'objects';
 import { Sphere, Body, World, GSSolver, SplitSolver, NaiveBroadphase, Material, ContactMaterial, Plane, Vec3, Cylinder, Box, Quaternion } from 'cannon-es';
 import { BasicLights, CupLightsBlue, CupLightsYellow, StripLights } from 'lights';
@@ -30,18 +30,17 @@ class MainScene extends Scene {
         //***NEEDS TO BE INCORPORATED INTO SCENE */
         const blueLight = new CupLightsBlue(this);
         const yellowLight = new CupLightsYellow(this);
-        const table = new Table();
+        // const table = new Table();
 
-        this.add(table);
-        console.log(table);
+        // this.add(table);
+        // console.log(table);
         /* END SCENE INCORPORATION */
 
         this.state.gui.add(this.state, 'power', 1, 10);
 
-        //window.addEventListener('click', this.handleMouseClick.bind(this), false);
         window.addEventListener('keydown', this.handleKeyDownEvents.bind(this), false);
         this.initCannon();
-        this.init();
+        this.setupScene();
 
         //Add lights!
         //const blueRack = new Rack(this, 0);
@@ -52,14 +51,14 @@ class MainScene extends Scene {
         //this.add(blueRack);
 
         
-        const red = new StripLightsRed(this);
-        const white = new StripLightsWhite(this);
-        const green = new StripLights(this);
-        const blue = new StripLightsBlue(this);
-        this.add(red,white,green,blue);
+        // const red = new StripLightsRed(this);
+        // const white = new StripLightsWhite(this);
+        // const green = new StripLights(this);
+        // const blue = new StripLightsBlue(this);
+        // this.add(red,white,green,blue);
 
-        this.add(blueLight);
-        this.add(yellowLight);
+        // this.add(blueLight);
+        // this.add(yellowLight);
     }
 
     initCannon() {
@@ -106,67 +105,25 @@ class MainScene extends Scene {
         // We must add the contact materials to the world
         world.addContactMaterial(bounceCM);
         this.bounceMaterial = bounceMaterial;
-
-        // Create a plane
-
-        //this.add(groundBody);
     }
 
-    init() {
+    setupScene() {
         const pos = new Vector3(0, 0, 0);
         const arrow = new Arrow(this, pos);
         this.add(arrow);
         this.arrow = arrow;
 
-        //const groundMaterial = new Material('ground');
-
-        // Create a plane
-        
-        // const groundShape = new Plane();
-        // const groundBody = new Body({ mass: 0, material: this.groundMaterial });
-        // groundBody.addShape(groundShape);
-        // groundBody.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), -Math.PI / 2);
-        // this.groundBody = groundBody;
-        // this.world.addBody(groundBody);
-
         // Create a table-sized box
-
-        const tableShape = new Box(new Vec3(6 / 2, 6 / 2, 6 / 2));
-        const tableBody = new Body({
-            mass: 0, 
-            material: this.groundMaterial
-        });
-        tableBody.addShape(tableShape);
-        tableBody.position.set(0, -3, 0);
-        this.world.addBody(tableBody);
+        const tableDim = new Vector3(2.8, 2.4775, 6);
+        const tablePos = new Vector3(0, -3, 0);
+        const table = new Table(this, tableDim, tablePos);
+        this.add(table);
 
         // cup
-        const cupShape = new Cylinder(0.3, 0.2, 0.8, 32, 32);
-        const cupBody = new Body({
-            mass: 10,
-            material: this.groundMaterial,
-            position: new Vector3(0, 0.4, 0),
-        });
-        cupBody.addShape(cupShape);
-
-        cupBody.linearDamping = 0.1;
-        cupBody.addEventListener('collide', this.handleCupCollision);
-        this.cupBody = cupBody;
-        this.world.addBody(cupBody);
-
-        const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, true);
-        //cupGeometry.rotateX(Math.PI/2);
-        const cupMaterial = new MeshStandardMaterial();
-        const cupMesh = new Mesh(cupGeometry, cupMaterial);
-
-        this.add(cupMesh);
-        this.cupMesh = cupMesh;
+        const cup = new Cup(this, 1, 0.4, 1);
+        this.add(cup);
     }
-
-    handleCupCollision(event) {
-        console.log('hit');
-    }
-
+    
     handleKeyDownEvents(event) {
         const angle = 0.05;
         const axis = new Vector3(0, 1, 0);
@@ -197,7 +154,7 @@ class MainScene extends Scene {
         for (const obj of updateList) {
             obj.update(timeStamp);
         }
-        this.cupMesh.position.copy(this.cupBody.position);
+       // this.cupMesh.position.copy(this.cupBody.position);
     }
 }
 
