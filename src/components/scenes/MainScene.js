@@ -65,8 +65,8 @@ class MainScene extends Scene {
 
         const solver = new GSSolver();
 
-        //world.defaultContactMaterial.contactEquationStiffness = 1e9;
-        //world.defaultContactMaterial.contactEquationRelaxation = 4;
+        world.defaultContactMaterial.contactEquationStiffness = 1e9;
+        world.defaultContactMaterial.contactEquationRelaxation = 4;
 
         solver.iterations = 7;
         solver.tolerance = 0.1;
@@ -80,7 +80,7 @@ class MainScene extends Scene {
         world.broadphase = new NaiveBroadphase();
 
         // Create a slippery material (friction coefficient = 0.0)
-        const groundMaterial = new Material();
+        const groundMaterial = new Material('ground');
         const groundCM = new ContactMaterial(groundMaterial, groundMaterial, {
             friction: 0.4,
             restitution: 0.3,
@@ -93,16 +93,15 @@ class MainScene extends Scene {
         world.addContactMaterial(groundCM);
         this.groundMaterial = groundMaterial;
         
-        const bounceMaterial = new Material();
-        const bounceCM = new ContactMaterial(
-            groundMaterial,
-            bounceMaterial,
-            0.0, // friction coefficient
-            0.9  // restitution
-        );
+        const bounceMaterial = new Material('bounce');
+        const bounceCM = new ContactMaterial( groundMaterial, bounceMaterial, { 
+            friction: 0.0,
+            restitution: 0.75 
+        });
         // We must add the contact materials to the world
         world.addContactMaterial(bounceCM);
         this.bounceMaterial = bounceMaterial;
+        console.log(world);
 
         // Create a plane
 
@@ -132,9 +131,9 @@ class MainScene extends Scene {
         // this.add(cup);
         const cupShape = new Cylinder(0.5, 0.35, 1, 32, 32);
         const cupBody = new Body({
-            mass: 10,
+            mass: 1000,
             material: this.groundMaterial,
-            position: new Vector3(2, 4, 2),
+            position: new Vector3(0, 0.5, 0),
         });
         cupBody.addShape(cupShape);
         cupBody.linearDamping = 0.1;
@@ -143,15 +142,7 @@ class MainScene extends Scene {
         const cupGeometry = new CylinderGeometry(0.5, 0.35, 1, 32, 1, false);
         const cupMaterial = new MeshStandardMaterial();
         const cupMesh = new Mesh(cupGeometry, cupMaterial);
-        // const mat = new ContactMaterial(groundMaterial, groundMaterial, {
-        //     friction: 0.4,
-        //     restitution: 0.3,
-        //     contactEquationStiffness: 1e8,
-        //     contactEquationRelaxation: 3,
-        //     frictionEquationStiffness: 1e8,
-        //     frictionEquationRegularizationTime: 3,
-        // });
-        // this.world.addContactMaterial(mat);
+
         this.add(cupMesh);
         this.cupMesh = cupMesh;
         this.world.addBody(cupBody);
