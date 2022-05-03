@@ -12,7 +12,7 @@ import { Sphere, Box, Cylinder, Body, Shape, ConvexPolyhedron, ContactMaterial }
 
 
 class Cup extends Group {
-    constructor(parent, x, y, z) {
+    constructor(parent, x, y, z, color) {
         // Call parent Group() constructor
         super();
         //const loader = new GLTFLoader();
@@ -30,6 +30,7 @@ class Cup extends Group {
         // 
         this.initMesh();
         this.name = "cup";
+        this.color = color;
 
         parent.addToUpdateList(this);
     }
@@ -81,6 +82,13 @@ class Cup extends Group {
     // }
 
     selfDestruct() {
+        if(this.color == "blue")
+        this.parent.parent.state.cups_blue--;
+        else
+        this.parent.parent.state.cups_yellow--;
+        console.log(this.color);
+        console.log(this.parent.parent.state.cups_yellow);
+        console.log(this.parent.parent.state.cups_blue);
         this.mesh.geometry.dispose();
         this.mesh.material.dispose();
         this.position.x = 10000;

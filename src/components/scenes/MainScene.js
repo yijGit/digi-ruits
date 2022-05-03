@@ -23,6 +23,12 @@ class MainScene extends Scene {
             updateList: [],
             cup_needs_delete: false,
             cup_to_delete: [],
+            rerack_blue: false,
+            rerack_yellow: false,
+            cups_blue: 12,
+            cups_yellow: 12,
+            rerack_blue_done: false,
+            rerack_yellow_done: false,
         };
 
         var bkg;
@@ -190,11 +196,58 @@ class MainScene extends Scene {
     update(timeStamp) {
         const { updateList } = this.state;
         this.world.fixedStep();
+
+         // what to do if rerack blue
+         if (this.state.rerack_blue && this.state.cups_blue == 6 && !this.state.rerack_blue_done) {
+            this.state.rerack_blue = false;
+            this.state.rerack_blue_done = true;
+            var rack = this.getObjectByName("blue_rack");
+            //make blue rerack position list
+            var rerack_pos = [];
+            rerack_pos.push(new Vector3((-1) * 0.65, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3((1) * 0.65, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3(0, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3((-0.5) * 0.65, 0.4, (0.5 - 5) * 1.1));
+            rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (0.5 + -5) * 1.1));
+            rerack_pos.push(new Vector3((0) * 0.65, 0.4, (1 + -5) * 1.1));
+            var pos_index = 0;
+            console.log("got here!");
+            for (let i = 0; i < 12; i++) {
+                if (rack.children[i].name == "cup") {
+                    rack.children[i].body.position.copy(rerack_pos[pos_index]);
+                    pos_index++;
+                }
+            }
+        }
+
+        // what to do if rerack yellow
+        if (this.state.rerack_yellow && this.state.cups_yellow == 6 && !this.state.rerack_yellow_done) {
+            this.state.rerack_yellow = false;
+            this.state.rerack_yellow_done = true;
+            var rack = this.getObjectByName("yellow_rack");
+            //make yellow rerack position list
+            var rerack_pos = [];
+            rerack_pos.push(new Vector3((-1) * 0.65, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3((1) * 0.65, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3(0, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3((-0.5) * 0.65, 0.4, (9.5 - 5) * 1.1));
+            rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (9.5 + -5) * 1.1));
+            rerack_pos.push(new Vector3((0) * 0.65, 0.4, (9 + -5) * 1.1));
+            var pos_index = 0;
+            console.log("got here!");
+            for (let i = 0; i < 12; i++) {
+                if (rack.children[i].name == "cup") {
+                    rack.children[i].body.position.copy(rerack_pos[pos_index]);
+                    pos_index++;
+                }
+            }
+        }
+
         for (const obj of updateList) {
-            if(obj.name != "dead") obj.update(timeStamp);
+            if (obj.name != "dead") obj.update(timeStamp);
             // ball removal
-            if(obj.name == "ball"){
-                if(this.state.ball_needs_delete){
+            if (obj.name == "ball") {
+                if (this.state.ball_needs_delete) {
                     console.log("out of bounds!");
                     obj.selfDestruct();
                     this.remove(obj.mesh);
@@ -206,7 +259,7 @@ class MainScene extends Scene {
             }
         }
         // cup removal
-        if(this.state.cup_needs_delete){
+        if (this.state.cup_needs_delete) {
             var dead_cup = this.state.cup_to_delete.pop();
             dead_cup.selfDestruct();
             this.remove(dead_cup.mesh);
@@ -214,18 +267,20 @@ class MainScene extends Scene {
             this.state.cup_needs_delete = false;
             dead_cup.name = "dead";
         }
-        
+
         //pop "dead" objects
-        for(let i = 0; i < updateList.length; i++){
+        for (let i = 0; i < updateList.length; i++) {
             var obj = updateList[i];
-            if (obj.name == "dead"){
-                for(let j = i; j < updateList.length - 1; j++){
+            if (obj.name == "dead") {
+                for (let j = i; j < updateList.length - 1; j++) {
                     updateList[j] = updateList[j + 1];
                 }
                 updateList.pop();
             }
         }
-        
+
+       
+
         // this.cupMesh.position.copy(this.cupBody.position);
     }
 }
