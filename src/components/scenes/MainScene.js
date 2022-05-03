@@ -14,13 +14,24 @@ class MainScene extends Scene {
 
         this.state = {
             gui: new Dat.GUI(),
+            powerInc: false,
             spaceDown: false,
-            powerInc: true,
-            power: 1,
+            power: 0,
+            camera: camera,
             shootDirection: new Vector3(0, 0, 1),
             ball_instances: 0,
             ball_needs_delete: false,
             updateList: [],
+            cup_needs_delete: false,
+            cup_to_delete: [],
+            rerack_blue: false,
+            rerack_yellow: false,
+            cups_blue: 12,
+            cups_yellow: 12,
+            rerack_blue_done: false,
+            rerack_yellow_done: false,
+            current_player: 0,
+            ball_pos: new Vector3(0, 0, -7),
         };
         var bkg;
         const loader = new TextureLoader();
@@ -44,7 +55,7 @@ class MainScene extends Scene {
         // console.log(table);
         /* END SCENE INCORPORATION */
 
-        this.state.gui.add(this.state, 'power', 1, 10);
+        this.state.gui.add(this.state, 'power', 0, 10);
 
         window.addEventListener('keydown', this.handleKeyDownEvents.bind(this), false);
         window.addEventListener('keyup', this.handleKeyUpEvents.bind(this), false);
@@ -65,8 +76,8 @@ class MainScene extends Scene {
         // const blue = new StripLightsBlue(this);
         // this.add(red,white,green,blue);
 
-        this.add(blueLight);
-        this.add(yellowLight);
+        // this.add(blueLight);
+        // this.add(yellowLight);
     }
 
     initCannon() {
@@ -115,11 +126,22 @@ class MainScene extends Scene {
         this.bounceMaterial = bounceMaterial;
     }
 
-    setupScene() {
-        const pos = new Vector3(0, 0, 0);
+    setupArrow() {
+        let pos;
+        if (this.state.current_player === 0) {
+            pos = new Vector3(0, 0.25, -7);
+        }
+        else {
+            pos = new Vector3(0, 0.25, 7);
+        }
+        console.log(pos);
         const arrow = new Arrow(this, pos);
         this.add(arrow);
         this.arrow = arrow;
+    }
+
+    setupScene() {
+        this.setupArrow();
 
         // Create a table-sized box
         const tableDim = new Vector3(2.8, 2.4775, 6);
@@ -129,40 +151,48 @@ class MainScene extends Scene {
     }
 
     handleKeyDownEvents(event) {
-        const angle = 0.05;
+        const angle = 0.03;
         const axis = new Vector3(0, 1, 0);
         const key = event.key;
         if (key === 'a') {
-            this.arrow.show();
             this.state.shootDirection.applyAxisAngle(axis, angle);
-            this.arrow.updateShotDirectionPower(axis, angle);
-        } 
+            if (this.state.current_player === 1) {
+                this.arrow.updateShotRotate(-angle);
+            }
+            else {
+                this.arrow.updateShotRotate(angle);
+            }
+        }
         else if (key === 'd') {
             this.state.shootDirection.applyAxisAngle(axis, -angle);
-            this.arrow.updateShotDirectionPower(axis, -angle);
+            if (this.state.current_player === 1) {
+                this.arrow.updateShotRotate(angle);
+            }
+            else {
+                this.arrow.updateShotRotate(-angle);
+            }
         }
         else if (key === 'r') {
             this.state.ball_needs_delete = true;
         }
         else if (key === ' ') {
-            this.state.spaceDown = true;
-            if (this.state.power >= 5 ) {
-                this.state.powerInc = false;
+            if (this.state.ball_instances == 0) {
+                this.state.spaceDown = true;
+                if (this.state.power >= 10) {
+                    this.state.powerInc = false;
+                }
+                else if (this.state.power <= 0) {
+                    this.state.powerInc = true;
+                }
+                if (this.state.powerInc) {
+                    this.state.power += 1;
+                    this.state.gui.__controllers[4].setValue(this.state.power);
+                }
+                else {
+                    this.state.power -= 1;
+                    this.state.gui.__controllers[4].setValue(this.state.power);
+                }
             }
-            else if (this.state.power <= 0) {
-                this.state.powerInc = true;
-            }
-            if (this.state.powerInc) {
-                this.state.power += 0.25;
-            }
-            else {
-                this.state.power -= 0.25;
-            }
-            console.log(this.state.power);
-        }
-        else if (key === 's') {
-            const ball = new Ball(this, 0, this.state.shootDirection);
-            this.add(ball);
         }
     }
 
@@ -170,12 +200,13 @@ class MainScene extends Scene {
         const key = event.key;
         if (key === ' ') {
             if (this.state.spaceDown === true) {
-                const ball = new Ball(this, this.state.power, this.state.shootDirection);
+                const ball = new Ball(this, this.state.power / 10 + 2.5, this.state.shootDirection, this.state.ball_pos);
                 ball.shootBall();
                 this.add(ball);
             }
             this.state.spaceDown = false;
             this.state.power = 0;
+            this.state.gui.__controllers[4].setValue(this.state.power);
         }
     }
 
@@ -186,10 +217,58 @@ class MainScene extends Scene {
     update(timeStamp) {
         const { updateList } = this.state;
         this.world.fixedStep();
+
+         // what to do if rerack blue
+         if (this.state.rerack_blue && this.state.cups_blue == 6 && !this.state.rerack_blue_done) {
+            this.state.rerack_blue = false;
+            this.state.rerack_blue_done = true;
+            var rack = this.getObjectByName("blue_rack");
+            //make blue rerack position list
+            var rerack_pos = [];
+            rerack_pos.push(new Vector3((-1) * 0.65, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3((1) * 0.65, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3(0, 0.4, (0 - 5) * 1.1));
+            rerack_pos.push(new Vector3((-0.5) * 0.65, 0.4, (0.5 - 5) * 1.1));
+            rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (0.5 + -5) * 1.1));
+            rerack_pos.push(new Vector3((0) * 0.65, 0.4, (1 + -5) * 1.1));
+            var pos_index = 0;
+            console.log("got here!");
+            for (let i = 0; i < 12; i++) {
+                if (rack.children[i].name == "cup") {
+                    rack.children[i].body.position.copy(rerack_pos[pos_index]);
+                    pos_index++;
+                }
+            }
+        }
+
+        // what to do if rerack yellow
+        if (this.state.rerack_yellow && this.state.cups_yellow == 6 && !this.state.rerack_yellow_done) {
+            this.state.rerack_yellow = false;
+            this.state.rerack_yellow_done = true;
+            var rack = this.getObjectByName("yellow_rack");
+            //make yellow rerack position list
+            var rerack_pos = [];
+            rerack_pos.push(new Vector3((-1) * 0.65, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3((1) * 0.65, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3(0, 0.4, (10 - 5) * 1.1));
+            rerack_pos.push(new Vector3((-0.5) * 0.65, 0.4, (9.5 - 5) * 1.1));
+            rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (9.5 + -5) * 1.1));
+            rerack_pos.push(new Vector3((0) * 0.65, 0.4, (9 + -5) * 1.1));
+            var pos_index = 0;
+            console.log("got here!");
+            for (let i = 0; i < 12; i++) {
+                if (rack.children[i].name == "cup") {
+                    rack.children[i].body.position.copy(rerack_pos[pos_index]);
+                    pos_index++;
+                }
+            }
+        }
+
         for (const obj of updateList) {
-            if(obj.name != "dead") obj.update(timeStamp);
-            if(obj.name == "ball"){
-                if(this.state.ball_needs_delete){
+            if (obj.name != "dead") obj.update(timeStamp);
+            // ball removal
+            if (obj.name == "ball") {
+                if (this.state.ball_needs_delete) {
                     console.log("out of bounds!");
                     obj.selfDestruct();
                     this.remove(obj.mesh);
@@ -197,20 +276,53 @@ class MainScene extends Scene {
                     this.state.ball_needs_delete = false;
                     this.state.ball_instances = 0;
                     obj.name = "dead";
+                    if (this.state.current_player === 1) {
+                        this.state.current_player = 0;
+                    }
+                    else {
+                        this.state.current_player = 1; 
+                    }
+
+                    if (this.state.current_player === 0) {
+                        this.state.camera.position.set(0, 3, -10);
+                        this.state.ball_pos = new Vector3(0, 0, -7);
+                        this.state.shootDirection = new Vector3(0, 0, 1);
+                        this.remove(this.arrow);
+                        this.setupArrow();
+                    }
+                    else {
+                        this.state.camera.position.set(0, 3, 10);
+                        this.state.ball_pos = new Vector3(0, 0, 7);
+                        this.state.shootDirection = new Vector3(0, 0, -1);
+                        this.remove(this.arrow);
+                        this.setupArrow();
+                    }
                 }
             }
         }
-        //pop "dead" object
-        for(let i = 0; i < updateList.length; i++){
+        // cup removal
+        if (this.state.cup_needs_delete) {
+            var dead_cup = this.state.cup_to_delete.pop();
+            dead_cup.selfDestruct();
+            this.remove(dead_cup.mesh);
+            this.world.removeBody(dead_cup.body);
+            this.state.cup_needs_delete = false;
+            dead_cup.name = "dead";
+        }
+
+        //pop "dead" objects
+        for (let i = 0; i < updateList.length; i++) {
             var obj = updateList[i];
-            if (obj.name == "dead"){
-                for(let j = i; j < updateList.length - 1; j++){
+            if (obj.name == "dead") {
+                for (let j = i; j < updateList.length - 1; j++) {
                     updateList[j] = updateList[j + 1];
                 }
                 updateList.pop();
             }
         }
-        
+
+       
+
         // this.cupMesh.position.copy(this.cupBody.position);
     }
 }
