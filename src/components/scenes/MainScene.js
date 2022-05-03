@@ -58,14 +58,14 @@ class MainScene extends Scene {
         this.add(yellowRack);
         this.add(blueRack);
 
-        const red = new StripLightsRed(this);
-        const white = new StripLightsWhite(this);
-        const green = new StripLights(this);
-        const blue = new StripLightsBlue(this);
-        this.add(red,white,green,blue);
+        // const red = new StripLightsRed(this);
+        // const white = new StripLightsWhite(this);
+        // const green = new StripLights(this);
+        // const blue = new StripLightsBlue(this);
+        // this.add(red,white,green,blue);
 
-        this.add(blueLight);
-        this.add(yellowLight);
+        // this.add(blueLight);
+        // this.add(yellowLight);
     }
 
     initCannon() {

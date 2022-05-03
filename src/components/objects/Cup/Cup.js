@@ -43,11 +43,18 @@ class Cup extends Group {
         cupBody.addShape(cupShape);
         cupBody.linearDamping = 0.1;
         this.parent.world.addBody(cupBody);
-        cupBody.addEventListener('collide', this.handleCollision);
+        cupBody.addEventListener('collide', function (e) {
+            if (e.body.name == "ball"){
+                console.log('hit');
+                this.parent.parent.parent.state.ball_needs_delete = true;
+            }
+        });
         this.body = cupBody;
+        this.body.name = "cup";
+        this.body.parent = this;
     }
 
-    initMesh(){
+    initMesh() {
         const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, false);
         const cupMaterial = new MeshStandardMaterial();
         const cupMesh = new Mesh(cupGeometry, cupMaterial);
@@ -56,9 +63,10 @@ class Cup extends Group {
         this.mesh = cupMesh;
     }
 
-    handleCollision(event) {
-        console.log('hit');
-    }
+    // handleCollision(e) {
+    //     if(e.body.name == "ball") 
+    //     console.log('hit');
+    // }
 
 
     update(timeStamp) {
