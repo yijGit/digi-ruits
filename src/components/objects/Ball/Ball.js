@@ -20,6 +20,8 @@ class Ball extends Group {
         this.state = {
             power: power,
             shootDirection: shootDirection,
+            previous: new Vector3(),
+            moving: false
         };
 
         // Handles Collisions
@@ -65,11 +67,10 @@ class Ball extends Group {
     }
 
     // Update ball mesh
-    update() {
+    update(timeStamp) {
         this.mesh.position.copy(this.body.position);
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
-        // out of bounds condition
         if (Math.abs(this.mesh.position.z) > 7 || Math.abs(this.mesh.position.x) > 3) {
             this.parent.state.ball_needs_delete = true;
         }
@@ -81,7 +82,7 @@ class Ball extends Group {
     */
     shootBall() {
         const shootDirection = this.state.shootDirection;
-        const power = this.state.power;
+        const power = (this.state.power + 1) * 2;
         this.body.velocity.set(
             shootDirection.x * power,
             (shootDirection.y + 1) * power,

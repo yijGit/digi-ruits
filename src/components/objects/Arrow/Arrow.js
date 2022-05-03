@@ -58,14 +58,7 @@ class Arrow extends Group {
         pivot.add(cone);
     }
 
-    updateShotDirectionPower(axis, angle) {
-        // Change the arrow
-        // this.pivot.remove(this.cube);
-        // this.pivot.remove(this.cone);
-        // this.show();
-        // this.pivot.add(this.cube);
-        // this.pivot.add(this.cone);
-
+    updateShotRotate(angle) {
         this.pivot.rotation.y += angle;
     }
 

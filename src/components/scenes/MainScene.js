@@ -14,8 +14,9 @@ class MainScene extends Scene {
 
         this.state = {
             gui: new Dat.GUI(),
-            mouseClick: false,
-            power: 5,
+            powerInc: false,
+            spaceDown: false,
+            power: 0,
             shootDirection: new Vector3(0, 0, 1),
             ball_instances: 0,
             ball_needs_delete: false,
@@ -46,9 +47,11 @@ class MainScene extends Scene {
         // console.log(table);
         /* END SCENE INCORPORATION */
 
-        this.state.gui.add(this.state, 'power', 1, 10);
+        this.state.gui.add(this.state, 'power', 0, 10);
 
         window.addEventListener('keydown', this.handleKeyDownEvents.bind(this), false);
+        window.addEventListener('keyup', this.handleKeyUpEvents.bind(this), false);
+
         this.initCannon();
         this.setupScene();
 
@@ -130,28 +133,53 @@ class MainScene extends Scene {
     }
 
     handleKeyDownEvents(event) {
-        const angle = 0.05;
+        const angle = 0.03;
         const axis = new Vector3(0, 1, 0);
         const key = event.key;
         if (key === 'a') {
-            this.arrow.show();
             this.state.shootDirection.applyAxisAngle(axis, angle);
-            this.arrow.updateShotDirectionPower(axis, angle);
+            this.arrow.updateShotRotate(angle);
         }
         else if (key === 'd') {
             this.state.shootDirection.applyAxisAngle(axis, -angle);
-            this.arrow.updateShotDirectionPower(axis, -angle);
+            this.arrow.updateShotRotate(-angle);
         }
         else if (key === 'r') {
             this.state.ball_needs_delete = true;
         }
         else if (key === ' ') {
             if (this.state.ball_instances == 0) {
-                const ball = new Ball(this, this.state.power, this.state.shootDirection);
+                this.state.spaceDown = true;
+                if (this.state.power >= 10) {
+                    this.state.powerInc = false;
+                }
+                else if (this.state.power <= 0) {
+                    this.state.powerInc = true;
+                }
+                if (this.state.powerInc) {
+                    this.state.power += 1;
+                    this.state.gui.__controllers[4].setValue(this.state.power);
+                }
+                else {
+                    this.state.power -= 1;
+                    this.state.gui.__controllers[4].setValue(this.state.power);
+                }
+            }
+        }
+    }
+
+    handleKeyUpEvents(event) {
+        const key = event.key;
+        if (key === ' ') {
+            if (this.state.spaceDown === true) {
+                const ball = new Ball(this, this.state.power / 10 + 2.5, this.state.shootDirection);
                 ball.shootBall();
                 this.add(ball);
                 this.state.ball_instances++;
             }
+            this.state.spaceDown = false;
+            this.state.power = 0;
+            this.state.gui.__controllers[4].setValue(this.state.power);
         }
     }
 
