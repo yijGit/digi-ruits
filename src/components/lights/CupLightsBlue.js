@@ -13,6 +13,8 @@ class CupLightsBlue extends Group {
             rerack_blue: false,
         };
 
+        this.parent = parent; 
+
         const scale = 0.5;
         const x_pos = 0;
         const y_pos = 0;
@@ -22,7 +24,7 @@ class CupLightsBlue extends Group {
         const pos_scale_z = 1.1;
 
         let lightList = [];
-        //first row, yellow side
+        //first row, blue side
         lightList.push(new Vector3((-3 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((-2 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((-1 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0 + z_pos) * pos_scale_z));
@@ -31,7 +33,7 @@ class CupLightsBlue extends Group {
         lightList.push(new Vector3((2 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((3 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0 + z_pos) * pos_scale_z));
 
-        //second row, yellow side
+        //second row, blue side
         lightList.push(new Vector3((-2.5 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0.5 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((-1.5 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0.5 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((-0.5 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0.5 + z_pos) * pos_scale_z));
@@ -39,7 +41,7 @@ class CupLightsBlue extends Group {
         lightList.push(new Vector3((1.5 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0.5 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((2.5 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (0.5 + z_pos) * pos_scale_z));
 
-        //third row, yellow side
+        //third row, blue side
         lightList.push(new Vector3((-2 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (1 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((0 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (1 + z_pos) * pos_scale_z));
         lightList.push(new Vector3((2 + x_pos) * pos_scale_x, (0 + y_pos) * pos_scale_y, (1 + z_pos) * pos_scale_z));
@@ -62,6 +64,8 @@ class CupLightsBlue extends Group {
         let rerack = [2, 3, 4, 9, 10, 14];
         let twoRacks = [0, 1, 2, 4, 5, 6, 7, 8, 11, 12, 13, 15];
         if (this.state.rerack_blue) {
+            this.parent.state.rerack_blue = true;
+            this.state.rerack_blue = false;
             //if rerack, only the 6 lights in the middle should be on
             //console.log(this.children);
             for (let i = 0; i < 16; i++) {
@@ -75,6 +79,7 @@ class CupLightsBlue extends Group {
             }
         }
         else {
+            this.parent.state.rerack_blue = false;
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
                     this.children[i].position.y = -0.5;

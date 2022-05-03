@@ -1,4 +1,4 @@
-import { Group, Vector3 } from 'three';
+import { BlendingEquation, Group, Vector3 } from 'three';
 import { Cup } from 'objects';
 
 class Rack extends Group {
@@ -69,17 +69,19 @@ class Rack extends Group {
 
         let twoRacks = [0, 1, 2, 4, 5, 6, 7, 8, 11, 12, 13, 15];
         if (side == 0) {
+            this.name = "blue_rack";
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
-                    let cup = new Cup(parent, list[i].x, 0.0, list[i].z);
+                    let cup = new Cup(parent, list[i].x, 0.4, list[i].z, "blue");
                     this.add(cup);
                 }
             }
         }
         else {
+            this.name = "yellow_rack";
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
-                    let cup = new Cup(parent, list[16 + i].x, 0.0, list[16 + i].z);
+                    let cup = new Cup(parent, list[16 + i].x, 0.4, list[16 + i].z, "yellow");
                     this.add(cup);
                 }
             }

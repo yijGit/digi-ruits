@@ -12,7 +12,7 @@ import { Sphere, Box, Cylinder, Body, Shape, ConvexPolyhedron, ContactMaterial }
 
 
 class Cup extends Group {
-    constructor(parent, x, y, z) {
+    constructor(parent, x, y, z, color) {
         // Call parent Group() constructor
         super();
         //const loader = new GLTFLoader();
@@ -25,10 +25,13 @@ class Cup extends Group {
         // });
 
         // Handles Collisions
+        this.color = color;
+        this.name = "cup";
         this.initBody(x, y, z);
 
         // 
         this.initMesh();
+
 
         parent.addToUpdateList(this);
     }
@@ -48,11 +51,14 @@ class Cup extends Group {
                 console.log('hit');
                 //actions for if it is high enough
                 console.log(e.body.position.y);
-                if (e.body.position.y > 0.39) {
+                if (e.body.position.y > 0.3) {
                     var dist = Math.pow(e.body.position.z - this.position.z, 2) + Math.pow(e.body.position.x - this.position.x, 2);
-                    if (dist < (0.25 * 0.25)) {
+                    if (dist < (0.3 * 0.3)) {
                         console.log('success');
+                        //initiate cup and ball delete
                         this.parent.parent.parent.state.ball_needs_delete = true;
+                        this.parent.parent.parent.state.cup_needs_delete = true;
+                        this.parent.parent.parent.state.cup_to_delete.push(this.parent);
                     }
                 }
             }
@@ -63,27 +69,35 @@ class Cup extends Group {
     }
 
     initMesh() {
+        let cupMaterial;
+        if (this.color === "blue") {
+            cupMaterial = new MeshStandardMaterial({color: 0x248bc6});
+            //color = '0x248bc6';
+        }
+        else {
+            cupMaterial = new MeshStandardMaterial({color: 0xa38000});
+            //color = '0xa38000';
+        }
         const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, false);
-        const cupMaterial = new MeshStandardMaterial();
         const cupMesh = new Mesh(cupGeometry, cupMaterial);
         this.add(cupMesh);
         cupMesh.position.copy(this.body.position);
         this.mesh = cupMesh;
-
-
-        const insideGeometry = new CylinderGeometry(0.285, 0.285, 0.005, 32, 32, false);
-        const insideMaterial = new MeshBasicMaterial();
-        const insideMesh = new Mesh(insideGeometry, insideMaterial);
-        this.add(insideMesh);
-        insideMesh.position.copy(this.insideBody.position);
-        this.insideMesh = insideMesh;
     }
 
-    // handleCollision(e) {
-    //     if(e.body.name == "ball") 
-    //     console.log('hit');
-    // }
 
+    selfDestruct() {
+        if(this.color == "blue")
+        this.parent.parent.state.cups_blue--;
+        else
+        this.parent.parent.state.cups_yellow--;
+        console.log(this.color);
+        console.log(this.parent.parent.state.cups_yellow);
+        console.log(this.parent.parent.state.cups_blue);
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+        this.position.x = 10000;
+    }
 
     update(timeStamp) {
         //console.log(this.body.position);
@@ -91,8 +105,6 @@ class Cup extends Group {
         this.mesh.quaternion.copy(this.body.quaternion);
         this.state.previous = this.body.position.clone();
 
-        this.insideMesh.position.copy(this.insideBody.position);
-        this.insideMesh.quaternion.copy(this.insideBody.quaternion);
     }
 }
 

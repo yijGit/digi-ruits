@@ -11,6 +11,7 @@ class CupLightsYellow extends Group {
             rerack_yellow: false,
         };
 
+        this.parent = parent;
         const scale = 0.5;
         const x_pos = 0;
         const y_pos = 0;
@@ -60,6 +61,8 @@ class CupLightsYellow extends Group {
         let rerack = [2, 3, 4, 9, 10, 14];
         let twoRacks = [0, 1, 2, 4, 5, 6, 7, 8, 11, 12, 13, 15];
         if (this.state.rerack_yellow) {
+            this.parent.state.rerack_yellow = true;
+            this.state.rerack_yellow = false;
             //if rerack, only the 6 lights in the middle should be on
             //console.log(this.children);
             for (let i = 0; i < 16; i++) {
@@ -73,6 +76,7 @@ class CupLightsYellow extends Group {
             }
         }
         else {
+            this.parent.state.rerack_yellow = false;
             for (let i = 0; i < 16; i++) {
                 if (twoRacks.includes(i)) {
                     this.children[i].position.y = -0.5;
