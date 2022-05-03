@@ -20,6 +20,8 @@ class MainScene extends Scene {
             ball_instances: 0,
             ball_needs_delete: false,
             updateList: [],
+            cup_needs_delete: false,
+            cup_to_delete: [],
         };
 
         var bkg;
@@ -162,6 +164,7 @@ class MainScene extends Scene {
         this.world.fixedStep();
         for (const obj of updateList) {
             if(obj.name != "dead") obj.update(timeStamp);
+            // ball removal
             if(obj.name == "ball"){
                 if(this.state.ball_needs_delete){
                     console.log("out of bounds!");
@@ -174,7 +177,17 @@ class MainScene extends Scene {
                 }
             }
         }
-        //pop "dead" object
+        // cup removal
+        if(this.state.cup_needs_delete){
+            var dead_cup = this.state.cup_to_delete.pop();
+            dead_cup.selfDestruct();
+            this.remove(dead_cup.mesh);
+            this.world.removeBody(dead_cup.body);
+            this.state.cup_needs_delete = false;
+            dead_cup.name = "dead";
+        }
+        
+        //pop "dead" objects
         for(let i = 0; i < updateList.length; i++){
             var obj = updateList[i];
             if (obj.name == "dead"){

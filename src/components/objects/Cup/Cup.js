@@ -29,6 +29,7 @@ class Cup extends Group {
 
         // 
         this.initMesh();
+        this.name = "cup";
 
         parent.addToUpdateList(this);
     }
@@ -48,11 +49,14 @@ class Cup extends Group {
                 console.log('hit');
                 //actions for if it is high enough
                 console.log(e.body.position.y);
-                if (e.body.position.y > 0.39) {
+                if (e.body.position.y > 0.3) {
                     var dist = Math.pow(e.body.position.z - this.position.z, 2) + Math.pow(e.body.position.x - this.position.x, 2);
-                    if (dist < (0.25 * 0.25)) {
+                    if (dist < (0.3 * 0.3)) {
                         console.log('success');
+                        //initiate cup and ball delete
                         this.parent.parent.parent.state.ball_needs_delete = true;
+                        this.parent.parent.parent.state.cup_needs_delete = true;
+                        this.parent.parent.parent.state.cup_to_delete.push(this.parent);
                     }
                 }
             }
@@ -76,6 +80,11 @@ class Cup extends Group {
     //     console.log('hit');
     // }
 
+    selfDestruct() {
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+        this.position.x = 10000;
+    }
 
     update(timeStamp) {
         //console.log(this.body.position);
