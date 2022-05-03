@@ -201,6 +201,7 @@ class MainScene extends Scene {
         if (key === ' ') {
             if (this.state.spaceDown === true) {
                 const ball = new Ball(this, this.state.power / 10 + 2.5, this.state.shootDirection, this.state.ball_pos);
+                this.state.ball_instances++;
                 ball.shootBall();
                 this.add(ball);
             }
