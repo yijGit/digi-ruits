@@ -44,9 +44,17 @@ class Cup extends Group {
         cupBody.linearDamping = 0.1;
         this.parent.world.addBody(cupBody);
         cupBody.addEventListener('collide', function (e) {
-            if (e.body.name == "ball"){
+            if (e.body.name == "ball") {
                 console.log('hit');
-                this.parent.parent.parent.state.ball_needs_delete = true;
+                //actions for if it is high enough
+                console.log(e.body.position.y);
+                if (e.body.position.y > 0.39) {
+                    var dist = Math.pow(e.body.position.z - this.position.z, 2) + Math.pow(e.body.position.x - this.position.x, 2);
+                    if (dist < (0.25 * 0.25)) {
+                        console.log('success');
+                        this.parent.parent.parent.state.ball_needs_delete = true;
+                    }
+                }
             }
         });
         this.body = cupBody;
