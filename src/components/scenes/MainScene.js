@@ -210,12 +210,6 @@ class MainScene extends Scene {
             this.state.spaceDown = false;
             this.state.power = 0;
             this.state.gui.__controllers[4].setValue(this.state.power);
-            if (this.state.current_player === 1) {
-                this.state.current_player = 0;
-            }
-            else {
-                this.state.current_player = 1; 
-            }
         }
     }
 
@@ -285,6 +279,12 @@ class MainScene extends Scene {
                     this.state.ball_needs_delete = false;
                     this.state.ball_instances = 0;
                     obj.name = "dead";
+                    if (this.state.current_player === 1) {
+                        this.state.current_player = 0;
+                    }
+                    else {
+                        this.state.current_player = 1; 
+                    }
 
                     if (this.state.current_player === 0) {
                         this.state.camera.position.set(0, 3, -10);
