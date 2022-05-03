@@ -11,15 +11,16 @@ import { Sphere, Body } from 'cannon-es';
 import { MeshBasicMaterial, Material, BufferGeometry } from 'three';
 
 class Ball extends Group {
-    constructor(parent, power, shootDirection) {
+    constructor(parent, pow, dir, pos) {
         super();
         this.parent = parent;
         this.name = "ball";
 
         // Initialize state and ball properties
         this.state = {
-            power: power,
-            shootDirection: shootDirection,
+            power: pow,
+            shootDirection: dir,
+            pos: pos,
             previous: new Vector3(),
             moving: false
         };
@@ -41,7 +42,7 @@ class Ball extends Group {
         const sphereBody = new Body({
             mass: mass,
             material: this.parent.bounceMaterial,
-            position: new Vector3(0, 0, -7)
+            position: this.state.pos
         });
         sphereBody.addShape(sphereShape);
         //sphereBody.position.set(0, 0, -7);

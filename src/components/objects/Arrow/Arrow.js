@@ -10,10 +10,10 @@ import {
 } from 'three';
 
 class Arrow extends Group {
-    constructor(parent, ballPos) {
+    constructor(parent, pos) {
         super();
         this.parent = parent;
-        this.ballPos = ballPos;
+        this.pos = pos;
 
         // Initialize state
         this.state = {};
@@ -24,10 +24,9 @@ class Arrow extends Group {
 
     setupArrowMesh() {
         // Create a box
-        var geometry = new BoxGeometry(0.25, 0.25, 1);
-        var material = new MeshNormalMaterial({ color: 0xffffff });
-        var cube = new Mesh(geometry, material);
-        cube.position.set(this.ballPos.x, this.ballPos.y, this.ballPos.z);
+        const geometry = new BoxGeometry(0.25, 0.25, 1);
+        const material = new MeshNormalMaterial({ color: 0xffffff });
+        const cube = new Mesh(geometry, material);
         this.cube = cube;
         this.add(cube);
 
@@ -35,24 +34,19 @@ class Arrow extends Group {
         const radius = 0.25;
         const height = 0.5;
         const radialSegments = 32;
-        var geometryPyramid = new ConeGeometry(radius, height, radialSegments);
-        var cone = new Mesh(geometryPyramid, material);
+        const geometryPyramid = new ConeGeometry(radius, height, radialSegments);
+        const cone = new Mesh(geometryPyramid, material);
         cone.rotation.x = Math.PI / 2;
-        cone.position.set(
-            this.ballPos.x,
-            this.ballPos.y,
-            this.ballPos.z + 0.75
-        );
+        cone.position.set(0, 0, 0.75);
         this.cone = cone;
         this.add(cone);
 
-        let pivot = new Group();
+        const pivot = new Group();
         this.pivot = pivot;
-        pivot.position.set(
-            this.ballPos.x,
-            this.ballPos.y + 0.25,
-            this.ballPos.z - 7
-        );
+        pivot.position.set(this.pos.x, this.pos.y, this.pos.z);
+        console.log(this.pos);
+        console.log(pivot.position);
+        pivot.lookAt(this.parent.state.shootDirection);
         this.add(pivot);
         pivot.add(cube);
         pivot.add(cone);

@@ -17,6 +17,7 @@ class MainScene extends Scene {
             powerInc: false,
             spaceDown: false,
             power: 0,
+            camera: camera,
             shootDirection: new Vector3(0, 0, 1),
             ball_instances: 0,
             ball_needs_delete: false,
@@ -29,6 +30,8 @@ class MainScene extends Scene {
             cups_yellow: 12,
             rerack_blue_done: false,
             rerack_yellow_done: false,
+            current_player: 0,
+            ball_pos: new Vector3(0, 0, -7),
         };
 
         var bkg;
@@ -125,11 +128,22 @@ class MainScene extends Scene {
         this.bounceMaterial = bounceMaterial;
     }
 
-    setupScene() {
-        const pos = new Vector3(0, 0, 0);
+    setupArrow() {
+        let pos;
+        if (this.state.current_player === 0) {
+            pos = new Vector3(0, 0.25, -7);
+        }
+        else {
+            pos = new Vector3(0, 0.25, 7);
+        }
+        console.log(pos);
         const arrow = new Arrow(this, pos);
         this.add(arrow);
         this.arrow = arrow;
+    }
+
+    setupScene() {
+        this.setupArrow();
 
         // Create a table-sized box
         const tableDim = new Vector3(2.8, 2.4775, 6);
@@ -144,11 +158,21 @@ class MainScene extends Scene {
         const key = event.key;
         if (key === 'a') {
             this.state.shootDirection.applyAxisAngle(axis, angle);
-            this.arrow.updateShotRotate(angle);
+            if (this.state.current_player === 1) {
+                this.arrow.updateShotRotate(-angle);
+            }
+            else {
+                this.arrow.updateShotRotate(angle);
+            }
         }
         else if (key === 'd') {
             this.state.shootDirection.applyAxisAngle(axis, -angle);
-            this.arrow.updateShotRotate(-angle);
+            if (this.state.current_player === 1) {
+                this.arrow.updateShotRotate(angle);
+            }
+            else {
+                this.arrow.updateShotRotate(-angle);
+            }
         }
         else if (key === 'r') {
             this.state.ball_needs_delete = true;
@@ -178,7 +202,7 @@ class MainScene extends Scene {
         const key = event.key;
         if (key === ' ') {
             if (this.state.spaceDown === true) {
-                const ball = new Ball(this, this.state.power / 10 + 2.5, this.state.shootDirection);
+                const ball = new Ball(this, this.state.power / 10 + 2.5, this.state.shootDirection, this.state.ball_pos);
                 ball.shootBall();
                 this.add(ball);
                 this.state.ball_instances++;
@@ -186,6 +210,12 @@ class MainScene extends Scene {
             this.state.spaceDown = false;
             this.state.power = 0;
             this.state.gui.__controllers[4].setValue(this.state.power);
+            if (this.state.current_player === 1) {
+                this.state.current_player = 0;
+            }
+            else {
+                this.state.current_player = 1; 
+            }
         }
     }
 
@@ -255,6 +285,21 @@ class MainScene extends Scene {
                     this.state.ball_needs_delete = false;
                     this.state.ball_instances = 0;
                     obj.name = "dead";
+
+                    if (this.state.current_player === 0) {
+                        this.state.camera.position.set(0, 3, -10);
+                        this.state.ball_pos = new Vector3(0, 0, -7);
+                        this.state.shootDirection = new Vector3(0, 0, 1);
+                        this.remove(this.arrow);
+                        this.setupArrow();
+                    }
+                    else {
+                        this.state.camera.position.set(0, 3, 10);
+                        this.state.ball_pos = new Vector3(0, 0, 7);
+                        this.state.shootDirection = new Vector3(0, 0, -1);
+                        this.remove(this.arrow);
+                        this.setupArrow();
+                    }
                 }
             }
         }

@@ -25,12 +25,13 @@ class Cup extends Group {
         // });
 
         // Handles Collisions
+        this.color = color;
+        this.name = "cup";
         this.initBody(x, y, z);
 
         // 
         this.initMesh();
-        this.name = "cup";
-        this.color = color;
+
 
         parent.addToUpdateList(this);
     }
@@ -68,8 +69,17 @@ class Cup extends Group {
     }
 
     initMesh() {
+        let cupMaterial;
+        if (this.color === "blue") {
+            cupMaterial = new MeshStandardMaterial({color: 0x248bc6});
+            //color = '0x248bc6';
+        }
+        else {
+            cupMaterial = new MeshStandardMaterial({color: 0xa38000});
+            //color = '0xa38000';
+        }
         const cupGeometry = new CylinderGeometry(0.3, 0.2, 0.8, 32, 32, false);
-        const cupMaterial = new MeshStandardMaterial();
+        //const cupMaterial = new MeshStandardMaterial({color: color});
         const cupMesh = new Mesh(cupGeometry, cupMaterial);
         this.add(cupMesh);
         cupMesh.position.copy(this.body.position);
