@@ -36,7 +36,7 @@ class Cup extends Group {
     initBody(x, y, z) {
         const cupShape = new Cylinder(0.3, 0.2, 0.8, 32, 32);
         const cupBody = new Body({
-            mass: 10,
+            mass: 5,
             material: this.parent.groundMaterial,
             position: new Vector3(x, y, z),
         });
@@ -48,8 +48,9 @@ class Cup extends Group {
                 console.log('hit');
                 //actions for if it is high enough
                 console.log(e.body.position.y);
-                if (e.body.position.y > 0.39) {
+                if (e.body.position.y > 0.29) {
                     var dist = Math.pow(e.body.position.z - this.position.z, 2) + Math.pow(e.body.position.x - this.position.x, 2);
+                    // only successful if high enough AND within certain radius of center (opening)
                     if (dist < (0.25 * 0.25)) {
                         console.log('success');
                         this.parent.parent.parent.state.ball_needs_delete = true;
