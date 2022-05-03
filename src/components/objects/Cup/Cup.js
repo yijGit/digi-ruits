@@ -60,7 +60,6 @@ class Cup extends Group {
         // insideBody.addEventListener('collide', this.handleCollision);
         // this.insideBody = insideBody;
         //const boxShape = new Box(new Vector3(2, 2, 5))
-        console.log(cupShape.height);
         const triggerBody = new Body();
         triggerBody.addShape(insideShape);
         triggerBody.position.set(1, 0.3, 1);

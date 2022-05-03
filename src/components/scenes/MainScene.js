@@ -18,12 +18,13 @@ class MainScene extends Scene {
             powerInc: true,
             power: 1,
             shootDirection: new Vector3(0, 0, 1),
+            ball_instances: 0,
+            ball_needs_delete: false,
             updateList: [],
         };
-        
         var bkg;
         const loader = new TextureLoader();
-bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
+        bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
             {
              bkg = texture;  
             });
@@ -51,22 +52,21 @@ bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
         this.setupScene();
 
         //Add lights!
-        //const blueRack = new Rack(this, 0);
-        //const yellowRack = new Rack(this, 1);
+        const blueRack = new Rack(this, 0);
+        const yellowRack = new Rack(this, 1);
 
         this.add(lights);
-        //this.add(yellowRack);
-        //this.add(blueRack);
+        this.add(yellowRack);
+        this.add(blueRack);
 
-        
         // const red = new StripLightsRed(this);
         // const white = new StripLightsWhite(this);
         // const green = new StripLights(this);
         // const blue = new StripLightsBlue(this);
         // this.add(red,white,green,blue);
 
-        // this.add(blueLight);
-        // this.add(yellowLight);
+        this.add(blueLight);
+        this.add(yellowLight);
     }
 
     initCannon() {
@@ -126,12 +126,8 @@ bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
         const tablePos = new Vector3(0, -3, 0);
         const table = new Table(this, tableDim, tablePos);
         this.add(table);
-
-        // cup
-        const cup = new Cup(this, 1, 0, 1);
-        this.add(cup);
     }
-    
+
     handleKeyDownEvents(event) {
         const angle = 0.05;
         const axis = new Vector3(0, 1, 0);
@@ -144,6 +140,9 @@ bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
         else if (key === 'd') {
             this.state.shootDirection.applyAxisAngle(axis, -angle);
             this.arrow.updateShotDirectionPower(axis, -angle);
+        }
+        else if (key === 'r') {
+            this.state.ball_needs_delete = true;
         }
         else if (key === ' ') {
             this.state.spaceDown = true;
@@ -188,9 +187,31 @@ bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
         const { updateList } = this.state;
         this.world.fixedStep();
         for (const obj of updateList) {
-            obj.update(timeStamp);
+            if(obj.name != "dead") obj.update(timeStamp);
+            if(obj.name == "ball"){
+                if(this.state.ball_needs_delete){
+                    console.log("out of bounds!");
+                    obj.selfDestruct();
+                    this.remove(obj.mesh);
+                    this.world.removeBody(obj.body);
+                    this.state.ball_needs_delete = false;
+                    this.state.ball_instances = 0;
+                    obj.name = "dead";
+                }
+            }
         }
-       // this.cupMesh.position.copy(this.cupBody.position);
+        //pop "dead" object
+        for(let i = 0; i < updateList.length; i++){
+            var obj = updateList[i];
+            if (obj.name == "dead"){
+                for(let j = i; j < updateList.length - 1; j++){
+                    updateList[j] = updateList[j + 1];
+                }
+                updateList.pop();
+            }
+        }
+        
+        // this.cupMesh.position.copy(this.cupBody.position);
     }
 }
 
