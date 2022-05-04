@@ -35,7 +35,7 @@ class MainScene extends Scene {
         };
         var bkg;
         const loader = new TextureLoader();
-        bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
+        bkg = loader.load('bkg.jpg' , function(texture)
             {
              bkg = texture;  
             });
@@ -70,14 +70,14 @@ class MainScene extends Scene {
         this.add(yellowRack);
         this.add(blueRack);
 
-        // const red = new StripLightsRed(this);
-        // const white = new StripLightsWhite(this);
-        // const green = new StripLights(this);
-        // const blue = new StripLightsBlue(this);
-        // this.add(red,white,green,blue);
+        const red = new StripLightsRed(this);
+        const white = new StripLightsWhite(this);
+        const green = new StripLights(this);
+        const blue = new StripLightsBlue(this);
+        this.add(red,white,green,blue);
 
-        // this.add(blueLight);
-        // this.add(yellowLight);
+        this.add(blueLight);
+        this.add(yellowLight);
     }
 
     initCannon() {
