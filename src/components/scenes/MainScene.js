@@ -7,6 +7,7 @@ import { Cup, Rack } from '../objects';
 import MODEL from '../objects/Cup/cup.gltf';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { StripLightsBlue, StripLightsRed, StripLightsWhite } from '../lights';
+import TEXTURE from 'bkg.jpg'
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -35,12 +36,8 @@ class MainScene extends Scene {
         };
         var bkg;
         const loader = new TextureLoader();
-        bkg = loader.load('bkg.jpg' , function(texture)
-            {
-             bkg = texture;  
-            });
-
-            this.background = bkg;
+        bkg = loader.load(TEXTURE);
+        this.background = bkg;
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
