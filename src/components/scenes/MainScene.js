@@ -7,7 +7,7 @@ import { Cup, Rack } from '../objects';
 import MODEL from '../objects/Cup/cup.gltf';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { StripLightsBlue, StripLightsRed, StripLightsWhite } from '../lights';
-import TEXTURE from 'bkg.jpg'
+import TEXTURE from './bkg.jpg'
 
 class MainScene extends Scene {
     constructor(camera) {
