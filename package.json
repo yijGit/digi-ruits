@@ -1,5 +1,6 @@
 {
   "name": "digi-ruits",
+  "repository": "digi-ruits",
   "version": "0.1.0",
   "title": "Digi-Ruits",
   "description": "Ruits is a Princeton Quadrangle Club cup-pong-type game with elaborate rules and a custom-built, animated LED table!",
