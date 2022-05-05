@@ -7,6 +7,7 @@ import { Cup, Rack } from '../objects';
 import MODEL from '../objects/Cup/cup.gltf';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { StripLightsBlue, StripLightsRed, StripLightsWhite } from '../lights';
+import TEXTURE from './bkg.jpg'
 
 class MainScene extends Scene {
     constructor(camera) {
@@ -35,12 +36,8 @@ class MainScene extends Scene {
         };
         var bkg;
         const loader = new TextureLoader();
-        bkg = loader.load('src/components/scenes/bkg.jpg' , function(texture)
-            {
-             bkg = texture;  
-            });
-
-            this.background = bkg;
+        bkg = loader.load(TEXTURE);
+        this.background = bkg;
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
@@ -70,14 +67,14 @@ class MainScene extends Scene {
         this.add(yellowRack);
         this.add(blueRack);
 
-        // const red = new StripLightsRed(this);
-        // const white = new StripLightsWhite(this);
-        // const green = new StripLights(this);
-        // const blue = new StripLightsBlue(this);
-        // this.add(red,white,green,blue);
+        const red = new StripLightsRed(this);
+        const white = new StripLightsWhite(this);
+        const green = new StripLights(this);
+        const blue = new StripLightsBlue(this);
+        this.add(red,white,green,blue);
 
-        // this.add(blueLight);
-        // this.add(yellowLight);
+        this.add(blueLight);
+        this.add(yellowLight);
     }
 
     initCannon() {

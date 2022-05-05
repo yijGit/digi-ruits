@@ -1,7 +1,7 @@
 import { Group } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box, Body } from 'cannon-es';
-import MODEL from './table.gltf';
+import MODEL from './table.glb';
 
 class Table extends Group {
     constructor(parent, dim, pos) {
