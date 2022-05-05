@@ -45,8 +45,6 @@ class Arrow extends Group {
         const pivot = new Group();
         this.pivot = pivot;
         pivot.position.set(this.pos.x, this.pos.y, this.pos.z);
-        console.log(this.pos);
-        console.log(pivot.position);
         pivot.lookAt(this.parent.state.shootDirection);
         this.add(pivot);
         pivot.add(cube);

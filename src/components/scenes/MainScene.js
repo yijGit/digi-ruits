@@ -38,8 +38,6 @@ class MainScene extends Scene {
         const loader = new TextureLoader();
         bkg = loader.load(TEXTURE);
         this.background = bkg;
-        const land = new Land();
-        const flower = new Flower(this);
         const lights = new BasicLights();
 
         // Add meshes to scene
@@ -67,14 +65,15 @@ class MainScene extends Scene {
         this.add(yellowRack);
         this.add(blueRack);
 
-        const red = new StripLightsRed(this);
-        const white = new StripLightsWhite(this);
-        const green = new StripLights(this);
-        const blue = new StripLightsBlue(this);
-        this.add(red,white,green,blue);
+       // const red = new StripLightsRed(this);
+       // const white = new StripLightsWhite(this);
+       // const green = new StripLights(this);
+       // const blue = new StripLightsBlue(this);
+       // this.add(red,white,green,blue);
 
         this.add(blueLight);
         this.add(yellowLight);
+        alert("Welcome to Digi-Ruits! Use A and D to rotate the launch arrow. Hold down the spacebar until you hit the desired power and launch!");
     }
 
     initCannon() {
@@ -96,7 +95,7 @@ class MainScene extends Scene {
         else
             world.solver = solver;
 
-        world.gravity.set(0, -9.81, 0);
+        world.gravity.set(0, -15, 0);
         world.broadphase = new NaiveBroadphase();
 
         // Create a slippery material (friction coefficient = 0.0)
@@ -131,7 +130,7 @@ class MainScene extends Scene {
         else {
             pos = new Vector3(0, 0.25, 7);
         }
-        console.log(pos);
+        // console.log(pos);
         const arrow = new Arrow(this, pos);
         this.add(arrow);
         this.arrow = arrow;
@@ -183,11 +182,11 @@ class MainScene extends Scene {
                 }
                 if (this.state.powerInc) {
                     this.state.power += 1;
-                    this.state.gui.__controllers[4].setValue(this.state.power);
+                    this.state.gui.__controllers[2].setValue(this.state.power);
                 }
                 else {
                     this.state.power -= 1;
-                    this.state.gui.__controllers[4].setValue(this.state.power);
+                    this.state.gui.__controllers[2].setValue(this.state.power);
                 }
             }
         }
@@ -204,7 +203,7 @@ class MainScene extends Scene {
             }
             this.state.spaceDown = false;
             this.state.power = 0;
-            this.state.gui.__controllers[4].setValue(this.state.power);
+            this.state.gui.__controllers[2].setValue(this.state.power);
         }
     }
 
@@ -230,7 +229,6 @@ class MainScene extends Scene {
             rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (0.5 + -5) * 1.1));
             rerack_pos.push(new Vector3((0) * 0.65, 0.4, (1 + -5) * 1.1));
             var pos_index = 0;
-            console.log("got here!");
             for (let i = 0; i < 12; i++) {
                 if (rack.children[i].name == "cup") {
                     rack.children[i].body.position.copy(rerack_pos[pos_index]);
@@ -253,7 +251,6 @@ class MainScene extends Scene {
             rerack_pos.push(new Vector3((0.5) * 0.65, 0.4, (9.5 + -5) * 1.1));
             rerack_pos.push(new Vector3((0) * 0.65, 0.4, (9 + -5) * 1.1));
             var pos_index = 0;
-            console.log("got here!");
             for (let i = 0; i < 12; i++) {
                 if (rack.children[i].name == "cup") {
                     rack.children[i].body.position.copy(rerack_pos[pos_index]);
@@ -267,7 +264,7 @@ class MainScene extends Scene {
             // ball removal
             if (obj.name == "ball") {
                 if (this.state.ball_needs_delete) {
-                    console.log("out of bounds!");
+                    // console.log("out of bounds!");
                     obj.selfDestruct();
                     this.remove(obj.mesh);
                     this.world.removeBody(obj.body);

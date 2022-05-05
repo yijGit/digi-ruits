@@ -48,13 +48,10 @@ class Cup extends Group {
         this.parent.world.addBody(cupBody);
         cupBody.addEventListener('collide', function (e) {
             if (e.body.name == "ball") {
-                console.log('hit');
                 //actions for if it is high enough
-                console.log(e.body.position.y);
                 if (e.body.position.y > 0.3) {
                     var dist = Math.pow(e.body.position.z - this.position.z, 2) + Math.pow(e.body.position.x - this.position.x, 2);
                     if (dist < (0.3 * 0.3)) {
-                        console.log('success');
                         //initiate cup and ball delete
                         this.parent.parent.parent.state.ball_needs_delete = true;
                         this.parent.parent.parent.state.cup_needs_delete = true;
@@ -91,9 +88,9 @@ class Cup extends Group {
         this.parent.parent.state.cups_blue--;
         else
         this.parent.parent.state.cups_yellow--;
-        console.log(this.color);
-        console.log(this.parent.parent.state.cups_yellow);
-        console.log(this.parent.parent.state.cups_blue);
+        // console.log(this.color);
+        // console.log(this.parent.parent.state.cups_yellow);
+        // console.log(this.parent.parent.state.cups_blue);
         this.mesh.geometry.dispose();
         this.mesh.material.dispose();
         this.position.x = 10000;
