@@ -71,8 +71,8 @@ class MainScene extends Scene {
        // const blue = new StripLightsBlue(this);
        // this.add(red,white,green,blue);
 
-        this.add(blueLight);
-        this.add(yellowLight);
+        // this.add(blueLight);
+        // this.add(yellowLight);
         alert("Welcome to Digi-Ruits! Use A and D to rotate the launch arrow. Hold down the spacebar until you hit the desired power and launch!");
     }
 
@@ -95,7 +95,7 @@ class MainScene extends Scene {
         else
             world.solver = solver;
 
-        world.gravity.set(0, -15, 0);
+        world.gravity.set(0, -9.81, 0);
         world.broadphase = new NaiveBroadphase();
 
         // Create a slippery material (friction coefficient = 0.0)
