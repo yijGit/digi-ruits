@@ -71,8 +71,8 @@ class MainScene extends Scene {
        // const blue = new StripLightsBlue(this);
        // this.add(red,white,green,blue);
 
-        // this.add(blueLight);
-        // this.add(yellowLight);
+        this.add(blueLight);
+        this.add(yellowLight);
         alert("Welcome to Digi-Ruits! Use A and D to rotate the launch arrow. Hold down the spacebar until you hit the desired power and launch!");
     }
 
